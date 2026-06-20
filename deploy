@@ -383,11 +383,11 @@ public class AdvancedExcelProcessor {
             sheet = workbook.getSheet(companyName.toUpperCase()+"-"+env.toUpperCase());
             if (sheet == null) { System.out.println("Sheet not found: "+companyName.toUpperCase()+"-"+env.toUpperCase()); continue; }
             initSheet(companyName, env);
-            writeH4H5(model.getModelMapH4H5(), companyName, env);
             writeR12(model.getModelMapR12(), companyName, env);
             writeR14(model.getModelMapR14(), companyName, env);
             writeR13(model.getModelMapR13(), companyName, env);
             writeESPCost();
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
         }
         this.fileName = generateVersionedFileName(companyName, monthYearName);
         writeExcel(); copyFileToInputDirectory();
@@ -404,7 +404,13 @@ public class AdvancedExcelProcessor {
         setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
         for(int i=1;i<27;i++){sheet.getRow(11).getCell(i).setCellValue(0);sheet.getRow(12).getCell(i).setCellValue(0);sheet.getRow(13).getCell(i).setCellValue(0);}
     }
-    public void writeH4H5(Map m,String c,String e){if(!check(c,e))return;double tax=bd(val(m,"Tax"));setNum("H4",bd(val(m,ExcelMapper.H4))+tax);setNum("H5",bd(val(m,ExcelMapper.H5)));}
+    public void writeH4H5(Map m,String c,String e){
+        if(!check(c,e))return;
+        double onDemand=0; Row r12=sheet.getRow(11); if(r12!=null){for(int i=1;i<=26;i++){Cell cl=r12.getCell(i);if(cl!=null)onDemand+=cl.getNumericCellValue();}}
+        double savings=0;  Row r13=sheet.getRow(12); if(r13!=null){for(int i=1;i<=26;i++){Cell cl=r13.getCell(i);if(cl!=null)savings+=cl.getNumericCellValue();}}
+        setNum("H4",new BigDecimal(onDemand).setScale(2,RoundingMode.HALF_UP).doubleValue());
+        setNum("H5",new BigDecimal(savings).setScale(2,RoundingMode.HALF_UP).doubleValue());
+    }
     public void writeR12(Map m,String c,String e){
         if(!check(c,e))return;
         setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
