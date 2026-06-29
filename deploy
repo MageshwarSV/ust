@@ -22,6 +22,7 @@ public class AdvancedExcelProcessor {
     @Value("${excel.input.file.name}") private String inputFileName;
     @Value("${excel.output.file.path}") private String outFilePath;
     private Workbook workbook; private Sheet sheet; private String fileName;
+    
     public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
         String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
         File outputDir = new File(outFilePath);
@@ -65,7 +66,7 @@ public class AdvancedExcelProcessor {
         writeExcel(); copyFileToInputDirectory();
     }
     
-    // THE FIX: equalsIgnoreCase instead of equals() to handle AmeriBen vs AMERIBEN mismatch!
+    // FIX 1: Ignore case so AmeriBen matches perfectly
     private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
     
     private void initSheet(String c,String e){
@@ -77,12 +78,15 @@ public class AdvancedExcelProcessor {
             if(sheet.getRow(13)!=null && sheet.getRow(13).getCell(i)!=null) sheet.getRow(13).getCell(i).setCellValue(0);
         }
     }
+    
+    // FIX 2: Correct logic using exactly what AWS API outputs (Usage + Tax)
     public void writeH4H5(Map m,String c,String e){
         if(!check(c,e))return;
         double tax = bd(val(m,"Tax"));
-        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax); // True AWS Usage + Tax
-        setNum("H5", bd(val(m,ExcelMapper.H5)));       // True AWS Savings
+        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
+        setNum("H5", bd(val(m,ExcelMapper.H5)));
     }
+    
     public void writeR12(Map m,String c,String e){
         if(!check(c,e))return;
         setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
@@ -94,6 +98,7 @@ public class AdvancedExcelProcessor {
         setNum("V12",bd(val(m,ExcelMapper.V12)));
     }
     public void writeR14(Map m,String c,String e){if(!check(c,e))return;setNum("W12",bd(val(m,ExcelMapper.W12)));setNum("Y12",bd(val(m,ExcelMapper.Y12)));}
+    
     public void writeR13(Map m,String c,String e){
         if(!check(c,e))return;
         setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
@@ -121,13 +126,22 @@ public class AdvancedExcelProcessor {
         if (c == null) c = r.createCell(cr.getCol());
         return c;
     }
+    
+    // FIX 3: Force Java and Excel to recalculate formulas so Total Cost never shows $0.00!
     private void writeExcel() throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { workbook.write(fos); }
+        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        evaluator.evaluateAll();
+        workbook.setForceFormulaRecalculation(true);
+        try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { 
+            workbook.write(fos); 
+            workbook.close(); 
+        }
     }
+    
     private void copyFileToInputDirectory() throws IOException {
-        Path src = Paths.get(outFilePath, fileName);
-        Path dest = Paths.get(inputFilePath, inputFileName + ExcelMapper.FILE_EXTENSION);
-        Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+        Path dest = Paths.get(inputFilePath + File.separator + inputFileName + ExcelMapper.FILE_EXTENSION);
+        if (Files.notExists(dest)) Files.createFile(dest);
+        Files.copy(Paths.get(outFilePath + File.separator + fileName), dest, StandardCopyOption.REPLACE_EXISTING);
     }
     public String getFileName() { return fileName; }
 }
