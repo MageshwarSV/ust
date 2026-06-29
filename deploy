@@ -1,322 +1,43 @@
-$proj = "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost"
+"C:\Program Files\OpenLogic\jre-22.0.2.9-hotspot\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2025.2.5\lib\idea_rt.jar=60941" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\143500\Desktop\awscost\awscost\target\classes;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.5.4\spring-boot-starter-web-3.5.4.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-starter\3.5.4\spring-boot-starter-3.5.4.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot\3.5.4\spring-boot-3.5.4.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.5.4\spring-boot-autoconfigure-3.5.4.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.5.4\spring-boot-starter-logging-3.5.4.jar;C:\Users\143500\.m2\repository\ch\qos\logback\logback-classic\1.5.18\logback-classic-1.5.18.jar;C:\Users\143500\.m2\repository\ch\qos\logback\logback-core\1.5.18\logback-core-1.5.18.jar;C:\Users\143500\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\143500\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\143500\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\143500\.m2\repository\org\springframework\spring-core\6.2.9\spring-core-6.2.9.jar;C:\Users\143500\.m2\repository\org\springframework\spring-jcl\6.2.9\spring-jcl-6.2.9.jar;C:\Users\143500\.m2\repository\org\yaml\snakeyaml\2.4\snakeyaml-2.4.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.5.4\spring-boot-starter-json-3.5.4.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.19.2\jackson-databind-2.19.2.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.19.2\jackson-annotations-2.19.2.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.19.2\jackson-core-2.19.2.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.19.2\jackson-datatype-jdk8-2.19.2.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.19.2\jackson-datatype-jsr310-2.19.2.jar;C:\Users\143500\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.19.2\jackson-module-parameter-names-2.19.2.jar;C:\Users\143500\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.5.4\spring-boot-starter-tomcat-3.5.4.jar;C:\Users\143500\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.43\tomcat-embed-core-10.1.43.jar;C:\Users\143500\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.43\tomcat-embed-el-10.1.43.jar;C:\Users\143500\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.43\tomcat-embed-websocket-10.1.43.jar;C:\Users\143500\.m2\repository\org\springframework\spring-web\6.2.9\spring-web-6.2.9.jar;C:\Users\143500\.m2\repository\org\springframework\spring-beans\6.2.9\spring-beans-6.2.9.jar;C:\Users\143500\.m2\repository\io\micrometer\micrometer-observation\1.15.2\micrometer-observation-1.15.2.jar;C:\Users\143500\.m2\repository\io\micrometer\micrometer-commons\1.15.2\micrometer-commons-1.15.2.jar;C:\Users\143500\.m2\repository\org\springframework\spring-webmvc\6.2.9\spring-webmvc-6.2.9.jar;C:\Users\143500\.m2\repository\org\springframework\spring-aop\6.2.9\spring-aop-6.2.9.jar;C:\Users\143500\.m2\repository\org\springframework\spring-context\6.2.9\spring-context-6.2.9.jar;C:\Users\143500\.m2\repository\org\springframework\spring-expression\6.2.9\spring-expression-6.2.9.jar;C:\Users\143500\.m2\repository\tools\jackson\core\jackson-core\3.1.0\jackson-core-3.1.0.jar;C:\Users\143500\.m2\repository\org\projectlombok\lombok\1.18.38\lombok-1.18.38.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\aws-core\2.20.63\aws-core-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\eventstream\eventstream\1.0.1\eventstream-1.0.1.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\annotations\2.20.63\annotations-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\regions\2.20.63\regions-2.20.63.jar;C:\Users\143500\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\auth\2.20.63\auth-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\profiles\2.20.63\profiles-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\sdk-core\2.20.63\sdk-core-2.20.63.jar;C:\Users\143500\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\http-client-spi\2.20.63\http-client-spi-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\metrics-spi\2.20.63\metrics-spi-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\json-utils\2.20.63\json-utils-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\endpoints-spi\2.20.63\endpoints-spi-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\utils\2.20.63\utils-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\third-party-jackson-core\2.20.63\third-party-jackson-core-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\costexplorer\2.20.63\costexplorer-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\aws-json-protocol\2.20.63\aws-json-protocol-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\protocol-core\2.20.63\protocol-core-2.20.63.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\netty-nio-client\2.20.63\netty-nio-client-2.20.63.jar;C:\Users\143500\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.123.Final\netty-transport-classes-epoll-4.1.123.Final.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\resourcegroupstaggingapi\2.20.63\resourcegroupstaggingapi-2.20.63.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec\4.2.9.Final\netty-codec-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-common\4.1.123.Final\netty-common-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-buffer\4.1.123.Final\netty-buffer-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-transport\4.1.123.Final\netty-transport-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-resolver\4.1.123.Final\netty-resolver-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-base\4.2.9.Final\netty-codec-base-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-compression\4.2.9.Final\netty-codec-compression-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-protobuf\4.2.9.Final\netty-codec-protobuf-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-marshalling\4.2.9.Final\netty-codec-marshalling-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-http\4.2.9.Final\netty-codec-http-4.2.9.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-handler\4.1.123.Final\netty-handler-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.123.Final\netty-transport-native-unix-common-4.1.123.Final.jar;C:\Users\143500\.m2\repository\io\netty\netty-codec-http2\4.2.9.Final\netty-codec-http2-4.2.9.Final.jar;C:\Users\143500\.m2\repository\org\apache\poi\poi\5.2.4\poi-5.2.4.jar;C:\Users\143500\.m2\repository\commons-codec\commons-codec\1.18.0\commons-codec-1.18.0.jar;C:\Users\143500\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\143500\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\143500\.m2\repository\commons-io\commons-io\2.13.0\commons-io-2.13.0.jar;C:\Users\143500\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\143500\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\143500\.m2\repository\org\apache\poi\poi-ooxml\5.2.4\poi-ooxml-5.2.4.jar;C:\Users\143500\.m2\repository\org\apache\poi\poi-ooxml-lite\5.2.4\poi-ooxml-lite-5.2.4.jar;C:\Users\143500\.m2\repository\org\apache\xmlbeans\xmlbeans\5.1.1\xmlbeans-5.1.1.jar;C:\Users\143500\.m2\repository\org\apache\commons\commons-compress\1.24.0\commons-compress-1.24.0.jar;C:\Users\143500\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\143500\.m2\repository\software\amazon\awssdk\apache-client\2.20.63\apache-client-2.20.63.jar;C:\Users\143500\.m2\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;C:\Users\143500\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;C:\Users\143500\.m2\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar com.healthproof.intplus.awscost.AwsCostApplication
 
-Write-Host "Creating BaseExcelProcessor..."
-Set-Content "$proj\excel\BaseExcelProcessor.java" @'
-package com.healthproof.intplus.awscost.excel;
-import com.healthproof.intplus.awscost.Model;
-import com.healthproof.intplus.awscost.util.ExcelMapper;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
-import java.io.*;
-import java.math.*;
-import java.nio.file.*;
-import java.util.*;
-import static com.healthproof.intplus.awscost.util.DateUtil.getRequiredDate;
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
 
-public abstract class BaseExcelProcessor {
-    @Value("${excel.template.file.path}") protected String templateFilePath;
-    @Value("${excel.template.file.name}") protected String templateFileName;
-    @Value("${excel.input.file.path}") protected String inputFilePath;
-    @Value("${excel.input.file.name}") protected String inputFileName;
-    @Value("${excel.output.file.path}") protected String outFilePath;
-    protected Workbook workbook; protected Sheet sheet; protected String fileName;
-    
-    public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
-        String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
-        File outputDir = new File(outFilePath);
-        if (!outputDir.exists()) outputDir.mkdirs();
-        File[] existing = outputDir.listFiles((d, n) -> n.startsWith(basePattern) && n.endsWith(ExcelMapper.FILE_EXTENSION));
-        int version = 1;
-        if (existing != null) {
-            for (File f : existing) {
-                try {
-                    int x = Integer.parseInt(f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length()));
-                    if (x >= version) version = x + 1;
-                } catch (Exception ignored) {}
-            }
-        }
-        this.fileName = basePattern + version + ExcelMapper.FILE_EXTENSION;
-        
-        String tplPath = templateFilePath + File.separator + companyName.toLowerCase() + "_template.xlsx";
-        File tplFile = new File(tplPath);
-        if (!tplFile.exists()) tplPath = templateFilePath + File.separator + templateFileName + ExcelMapper.FILE_EXTENSION;
-        try (FileInputStream fis = new FileInputStream(tplPath)) { this.workbook = new XSSFWorkbook(fis); }
+ :: Spring Boot ::                (v3.5.4)
 
-        for (int i = 0; i < environments.size(); i++) {
-            String env = environments.get(i); Model model = models.get(i);
-            String sheetName = companyName + "-" + env;
-            sheet = workbook.getSheet(sheetName);
-            if (sheet == null) {
-                for(int s=0; s<workbook.getNumberOfSheets(); s++){
-                    if(workbook.getSheetName(s).equalsIgnoreCase(sheetName)){ sheet = workbook.getSheetAt(s); break; }
-                }
-            }
-            if (sheet == null) { System.out.println("Sheet not found: "+sheetName); continue; }
-            
-            initSheet(companyName, env);
-            writeH4H5(model.getModelMapH4H5(), companyName, env);
-            writeR12(model.getModelMapR12(), companyName, env);
-            writeR14(model.getModelMapR14(), companyName, env);
-            writeR13(model.getModelMapR13(), companyName, env);
-            writeESPCost();
-        }
-        writeExcel(); copyFileToInputDirectory();
-    }
-    
-    protected boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
-    
-    protected void initSheet(String c,String e){
-        if(!check(c,e))return;
-        setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
-        for(int i=1;i<27;i++){
-            if(sheet.getRow(11)!=null && sheet.getRow(11).getCell(i)!=null) sheet.getRow(11).getCell(i).setCellValue(0);
-            if(sheet.getRow(12)!=null && sheet.getRow(12).getCell(i)!=null) sheet.getRow(12).getCell(i).setCellValue(0);
-            if(sheet.getRow(13)!=null && sheet.getRow(13).getCell(i)!=null) sheet.getRow(13).getCell(i).setCellValue(0);
-        }
-    }
-    
-    protected void writeH4H5(Map m,String c,String e){
-        if(!check(c,e))return;
-        double tax = bd(val(m,"Tax"));
-        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
-        setNum("H5", bd(val(m,ExcelMapper.H5)));
-    }
-    
-    protected abstract void writeR12(Map<String,String> m,String c,String e);
-    protected abstract void writeR14(Map<String,String> m,String c,String e);
-    protected abstract void writeR13(Map<String,String> m,String c,String e);
-    
-    protected void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
-    protected double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
-    
-    protected String val(Map<String,String> m,String k){
-        if(m.get(k)!=null) return m.get(k).toString();
-        String fallbackNoHyphen = k.replaceAll("-(\\d+)$", "$1"); 
-        if(m.get(fallbackNoHyphen)!=null) return m.get(fallbackNoHyphen).toString();
-        String fallbackWithHyphen = k.replaceAll("(?<!-)(\\d+)$", "-$1");
-        if(m.get(fallbackWithHyphen)!=null) return m.get(fallbackWithHyphen).toString();
-        return "0";
-    }
-    
-    protected void setNum(String ref, double val) {
-        Cell c = getCell(ref); if (c != null) { c.setCellValue(val); }
-    }
-    protected void setStr(String ref, String val) {
-        Cell c = getCell(ref); if (c != null) c.setCellValue(val);
-    }
-    protected Cell getCell(String ref) {
-        CellReference cr = new CellReference(ref);
-        Row r = sheet.getRow(cr.getRow());
-        if (r == null) r = sheet.createRow(cr.getRow());
-        Cell c = r.getCell(cr.getCol());
-        if (c == null) c = r.createCell(cr.getCol());
-        return c;
-    }
-    
-    protected void writeExcel() throws IOException {
-        workbook.setForceFormulaRecalculation(true);
-        try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { 
-            workbook.write(fos); workbook.close(); 
-        }
-    }
-    
-    protected void copyFileToInputDirectory() throws IOException {
-        Path dest = Paths.get(inputFilePath + File.separator + inputFileName + ExcelMapper.FILE_EXTENSION);
-        if (Files.notExists(dest)) Files.createFile(dest);
-        Files.copy(Paths.get(outFilePath + File.separator + fileName), dest, StandardCopyOption.REPLACE_EXISTING);
-    }
-    public String getFileName() { return fileName; }
-}
-'@
+2026-06-29T17:44:42.320+05:30  INFO 13436 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : Starting AwsCostApplication using Java 22.0.2 with PID 13436 (C:\Users\143500\Desktop\awscost\awscost\target\classes started by 143500 in C:\Users\143500\Desktop\awscost\awscost)
+2026-06-29T17:44:42.320+05:30  INFO 13436 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-06-29T17:44:42.533+05:30  WARN 13436 --- [Aws Cost] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.healthproof.intplus.awscost.AwsCostApplication]
+2026-06-29T17:44:42.605+05:30 ERROR 13436 --- [Aws Cost] [           main] o.s.boot.SpringApplication               : Application run failed
 
-$companies = @("Ameriben", "Bcbsks", "Clover", "Emergient", "Ghc", "Ibx", "Iuhp", "Medstar", "Phc", "Quality", "Zing", "Default")
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.healthproof.intplus.awscost.AwsCostApplication]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:194) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:418) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:791) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:609) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.4.jar:3.5.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.4.jar:3.5.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.4.jar:3.5.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.4.jar:3.5.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.4.jar:3.5.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.4.jar:3.5.4]
+	at com.healthproof.intplus.awscost.AwsCostApplication.main(AwsCostApplication.java:12) ~[classes/:na]
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'ExcelProcessor' for bean class [com.healthproof.intplus.awscost.excel.BcbsksExcelProcessor] conflicts with existing, non-compatible bean definition of same name and class [com.healthproof.intplus.awscost.excel.AmeribenExcelProcessor]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:361) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:288) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:128) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:346) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:281) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:204) ~[spring-context-6.2.9.jar:6.2.9]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:172) ~[spring-context-6.2.9.jar:6.2.9]
+	... 13 common frames omitted
 
-foreach ($c in $companies) {
-    Write-Host "Creating ${c}ExcelProcessor..."
-    $content = @"
-package com.healthproof.intplus.awscost.excel;
-import com.healthproof.intplus.awscost.util.ExcelMapper;
-import org.springframework.stereotype.Component;
-import java.util.Map;
 
-@Component("${c.ToLower()}ExcelProcessor")
-public class ${c}ExcelProcessor extends BaseExcelProcessor {
-    @Override
-    protected void writeR12(Map<String,String> m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
-        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
-        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
-        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
-        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
-        setNum("V12",bd(val(m,ExcelMapper.V12)));
-        
-        // Specific IBX rule to demonstrate isolated logic capability
-        if("${c}".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
-            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
-        }
-    }
-    
-    @Override
-    protected void writeR14(Map<String,String> m,String c,String e) {
-        if(!check(c,e))return;
-        setNum("W12",bd(val(m,ExcelMapper.W12)));
-        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
-        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
-        
-        double otherAwsServices = 0;
-        for (Map.Entry<String,String> entry : m.entrySet()) {
-            String serviceName = entry.getKey();
-            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
-                otherAwsServices += bd(entry.getValue());
-            }
-        }
-        setNum("X14", otherAwsServices);
-    }
-    
-    @Override
-    protected void writeR13(Map<String,String> m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
-        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
-        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
-        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
-        
-        if("${c}".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
-            setNum("W13",bd(val(m,ExcelMapper.W13)));
-        }
-    }
-}
-"@
-    Set-Content "$proj\excel\${c}ExcelProcessor.java" $content
-}
-
-Write-Host "Creating ExcelProcessorFactory..."
-Set-Content "$proj\excel\ExcelProcessorFactory.java" @'
-package com.healthproof.intplus.awscost.excel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-
-@Service
-public class ExcelProcessorFactory {
-    @Autowired
-    private ApplicationContext context;
-
-    public BaseExcelProcessor getProcessor(String companyName) {
-        String beanName = companyName.toLowerCase() + "ExcelProcessor";
-        try {
-            return (BaseExcelProcessor) context.getBean(beanName);
-        } catch (Exception e) {
-            System.out.println("No specific processor found for " + companyName + ". Using default.");
-            return (BaseExcelProcessor) context.getBean("defaultExcelProcessor");
-        }
-    }
-}
-'@
-
-Write-Host "Updating CostContorller.java..."
-Set-Content "$proj\contorller\CostContorller.java" @'
-package com.healthproof.intplus.awscost.contorller;
-import com.healthproof.intplus.awscost.*;
-import com.healthproof.intplus.awscost.awsDev.CostExplorerDev;
-import com.healthproof.intplus.awscost.excel.BaseExcelProcessor;
-import com.healthproof.intplus.awscost.excel.ExcelProcessorFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import java.io.*;
-import java.util.*;
-import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentTimeStamp;
-import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_FILE_NAME;
-import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_PATH;
-
-@RestController
-public class CostContorller {
-    @Autowired private ExcelProcessorFactory processorFactory;
-    @Autowired private CostExplorerDev costExplorerDev;
-    @Autowired private CredentialsReader credentialsReader;
-    @Value("${excel.output.file.path}") private String outFilePath;
-    
-    @GetMapping("/api/profiles")
-    public List<CompanyProfile> getProfiles() throws IOException { return credentialsReader.readProfiles(); }
-    
-    @PostMapping("/api/generate")
-    public Map<String, Serializable> generate(@RequestBody CostRequest request) throws Exception {
-        List<Model> models = new ArrayList<>();
-        Map<String, List<Map<String, Object>>> allRawData = new LinkedHashMap<>();
-        String ymStr = request.getYearMonth();
-        java.time.YearMonth ym;
-        if (ymStr == null || ymStr.trim().isEmpty() || ymStr.equalsIgnoreCase("DEFAULT")) {
-            ym = java.time.YearMonth.now().minusMonths(1);
-        } else {
-            ym = java.time.YearMonth.parse(ymStr.trim());
-        }
-        String startDate = ym.atDay(1).toString();
-        String endDate = ym.plusMonths(1).atDay(1).toString();
-        java.time.format.DateTimeFormatter formatMonthYear = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
-        String monthYearName = ym.format(formatMonthYear).toUpperCase();
-        
-        for (int i = 0; i < request.getProfiles().size(); i++) {
-            String profile = request.getProfiles().get(i);
-            String env = request.getEnvironments().get(i);
-            costExplorerDev.start(profile, env, startDate, endDate);
-            models.add(costExplorerDev.getModel());
-            allRawData.put(profile, costExplorerDev.getRawQueriesData());
-        }
-        
-        // NEW: Get the isolated processor for this specific company!
-        BaseExcelProcessor excelProcessor = processorFactory.getProcessor(request.getCompanyName());
-        excelProcessor.start(request.getCompanyName(), request.getEnvironments(), models, monthYearName);
-        
-        saveRawDataJson(excelProcessor.getFileName(), allRawData);
-        return Map.of("id","1","message","Report generated!","code",200,
-                "timeStamp",getCurrentTimeStamp(),"fileName",excelProcessor.getFileName(),"status","success");
-    }
-    
-    private void saveRawDataJson(String excelFileName, Object data) {
-        try {
-            if (excelFileName == null || !excelFileName.contains(".")) return;
-            String jsonFileName = excelFileName.substring(0, excelFileName.lastIndexOf(".")) + ".json";
-            File jsonFile = new File(outFilePath + File.separator + jsonFileName);
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
-            System.out.println("Consolidated Raw AWS data saved to: " + jsonFile.getAbsolutePath());
-        } catch (Exception e) {
-            System.err.println("Failed to save raw AWS data JSON: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    
-    @GetMapping("/downloads/{filename}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
-        File file = new File(outFilePath + File.separator + filename);
-        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            byte[] buf = new byte[(int)file.length()]; int n;
-            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-                    .body(bos.toByteArray());
-        }
-    }
-    
-    @PostMapping("/downloads")
-    public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
-        File file = new File(OUTPUT_PATH + OUTPUT_FILE_NAME);
-        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            byte[] buf = new byte[(int)file.length()]; int n;
-            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"report.xlsx\"")
-                    .body(bos.toByteArray());
-        }
-    }
-}
-'@
-
-Write-Host "SUCCESS: Created BaseExcelProcessor, ExcelProcessorFactory, updated CostContorller, and deployed 12 isolated company mappers!"
+Process finished with exit code 1
