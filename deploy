@@ -1,4 +1,4 @@
-# ---- Custom Medstar Excel Processor (Fixing EM Suite to Z12 & Z13) ----
+# ---- Custom Medstar Excel Processor (Fixing EM Suite & Combining IPLUS API) ----
 Write-Host "Creating Custom MedstarExcelProcessor..."
 Set-Content "$proj\excel\MedstarExcelProcessor.java" @'
 package com.healthproof.intplus.awscost.excel;
@@ -11,7 +11,12 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
     @Override
     protected void writeR12(Map<String,String> m,String c,String e){
         if(!check(c,e))return;
-        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        
+        // FIX: Add BOTH API costs together ($29.19 + $9.85) so you don't lose money!
+        double iplusApiTotal = bd(val(m, ExcelMapper.B12)) + bd(val(m, "Product$IPLUSAPI"));
+        setNum("B12", iplusApiTotal);
+        
+        setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
         setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
         setNum("K12",bd(val(m,ExcelMapper.K12)));
         
@@ -21,7 +26,7 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
         setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
         setNum("V12",bd(val(m,ExcelMapper.V12)));
         
-        // FIX: Put "Product$EM" into Cell Z12 (On Demand)
+        // FIX: Put "Product$EM" correctly into Cell Z12 (On Demand)
         setNum("Z12", bd(val(m, "Product$EM")));
     }
     
@@ -45,7 +50,12 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
     @Override
     protected void writeR13(Map<String,String> m,String c,String e){
         if(!check(c,e))return;
-        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        
+        // FIX: Add BOTH API costs together for Compute Savings as well!
+        double iplusApiTotal = bd(val(m, ExcelMapper.B13)) + bd(val(m, "Product$IPLUSAPI"));
+        setNum("B13", iplusApiTotal);
+        
+        setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
         setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
         setNum("K13",bd(val(m,ExcelMapper.K13)));
         
@@ -53,7 +63,7 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
         setNum("O13",bd(val(m,ExcelMapper.O13)));
         setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
         
-        // FIX: Put "Product$EM" into Cell Z13 (Compute Savings)
+        // FIX: Put "Product$EM" correctly into Cell Z13 (Compute Savings)
         setNum("Z13", bd(val(m, "Product$EM")));
     }
 }
