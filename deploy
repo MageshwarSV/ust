@@ -6,7 +6,7 @@ import com.healthproof.intplus.awscost.util.ExcelMapper;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 
-@Component("medstarexcelprocessor")
+@Component("medstarExcelProcessor")
 public class MedstarExcelProcessor extends BaseExcelProcessor {
     @Override
     protected void writeR12(Map<String,String> m,String c,String e){
