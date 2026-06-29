@@ -95,7 +95,27 @@ public class AdvancedExcelProcessor {
         if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("PROD"))setNum("U12",bd(val(m,ExcelMapper.U12_1)));
         setNum("V12",bd(val(m,ExcelMapper.V12)));
     }
-    public void writeR14(Map m,String c,String e){if(!check(c,e))return;setNum("W12",bd(val(m,ExcelMapper.W12)));setNum("Y12",bd(val(m,ExcelMapper.Y12)));}
+    
+    // NEW: Catch-All for Untagged AWS Services!
+    public void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        
+        // Write the main mapped ones
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        
+        // Dynamically sum up ALL other unmapped AWS Services (RDS, S3, GuardDuty, etc.)
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        
+        // Put the total into AWS Common Services (Column X12)
+        setNum("X12", otherAwsServices);
+    }
     
     public void writeR13(Map m,String c,String e){
         if(!check(c,e))return;
@@ -105,10 +125,10 @@ public class AdvancedExcelProcessor {
         setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
         if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("CS"))setNum("W13",bd(val(m,ExcelMapper.W13)));
     }
+    
     private void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
     private double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
     
-    // THE FIX: Smart Fallback! If "-1" is not found, automatically search for "1" and vice-versa!
     private String val(Map<String,String> m,String k){
         if(m.get(k)!=null) return m.get(k).toString();
         String fallbackNoHyphen = k.replaceAll("-(\\d+)$", "$1"); 
