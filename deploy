@@ -1,5 +1,7 @@
-# ---- 6. AdvancedExcelProcessor.java ----
-Set-Content "$proj\excel\AdvancedExcelProcessor.java" @'
+$proj = "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost"
+
+Write-Host "Creating BaseExcelProcessor..."
+Set-Content "$proj\excel\BaseExcelProcessor.java" @'
 package com.healthproof.intplus.awscost.excel;
 import com.healthproof.intplus.awscost.Model;
 import com.healthproof.intplus.awscost.util.ExcelMapper;
@@ -7,21 +9,19 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import java.io.*;
 import java.math.*;
 import java.nio.file.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import static com.healthproof.intplus.awscost.util.DateUtil.getRequiredDate;
-@Service
-public class AdvancedExcelProcessor {
-    @Value("${excel.template.file.path}") private String templateFilePath;
-    @Value("${excel.template.file.name}") private String templateFileName;
-    @Value("${excel.input.file.path}") private String inputFilePath;
-    @Value("${excel.input.file.name}") private String inputFileName;
-    @Value("${excel.output.file.path}") private String outFilePath;
-    private Workbook workbook; private Sheet sheet; private String fileName;
+
+public abstract class BaseExcelProcessor {
+    @Value("${excel.template.file.path}") protected String templateFilePath;
+    @Value("${excel.template.file.name}") protected String templateFileName;
+    @Value("${excel.input.file.path}") protected String inputFilePath;
+    @Value("${excel.input.file.name}") protected String inputFileName;
+    @Value("${excel.output.file.path}") protected String outFilePath;
+    protected Workbook workbook; protected Sheet sheet; protected String fileName;
     
     public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
         String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
@@ -32,8 +32,7 @@ public class AdvancedExcelProcessor {
         if (existing != null) {
             for (File f : existing) {
                 try {
-                    String vPart = f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length());
-                    int x = Integer.parseInt(vPart);
+                    int x = Integer.parseInt(f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length()));
                     if (x >= version) version = x + 1;
                 } catch (Exception ignored) {}
             }
@@ -66,9 +65,9 @@ public class AdvancedExcelProcessor {
         writeExcel(); copyFileToInputDirectory();
     }
     
-    private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    protected boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
     
-    private void initSheet(String c,String e){
+    protected void initSheet(String c,String e){
         if(!check(c,e))return;
         setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
         for(int i=1;i<27;i++){
@@ -78,58 +77,21 @@ public class AdvancedExcelProcessor {
         }
     }
     
-    public void writeH4H5(Map m,String c,String e){
+    protected void writeH4H5(Map m,String c,String e){
         if(!check(c,e))return;
         double tax = bd(val(m,"Tax"));
         setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
         setNum("H5", bd(val(m,ExcelMapper.H5)));
     }
     
-    public void writeR12(Map m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
-        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
-        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
-        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
-        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
-        if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("PROD"))setNum("U12",bd(val(m,ExcelMapper.U12_1)));
-        setNum("V12",bd(val(m,ExcelMapper.V12)));
-    }
+    protected abstract void writeR12(Map<String,String> m,String c,String e);
+    protected abstract void writeR14(Map<String,String> m,String c,String e);
+    protected abstract void writeR13(Map<String,String> m,String c,String e);
     
-    // NEW: Catch-All for Untagged AWS Services!
-    public void writeR14(Map<String,String> m,String c,String e) {
-        if(!check(c,e))return;
-        
-        // Write the main mapped ones
-        setNum("W12",bd(val(m,ExcelMapper.W12)));
-        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
-        
-        // Dynamically sum up ALL other unmapped AWS Services (RDS, S3, GuardDuty, etc.)
-        double otherAwsServices = 0;
-        for (Map.Entry<String,String> entry : m.entrySet()) {
-            String serviceName = entry.getKey();
-            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Tax")) {
-                otherAwsServices += bd(entry.getValue());
-            }
-        }
-        
-        // Put the total into AWS Common Services (Column X12)
-        setNum("X12", otherAwsServices);
-    }
+    protected void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
+    protected double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
     
-    public void writeR13(Map m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
-        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
-        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
-        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
-        if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("CS"))setNum("W13",bd(val(m,ExcelMapper.W13)));
-    }
-    
-    private void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
-    private double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
-    
-    private String val(Map<String,String> m,String k){
+    protected String val(Map<String,String> m,String k){
         if(m.get(k)!=null) return m.get(k).toString();
         String fallbackNoHyphen = k.replaceAll("-(\\d+)$", "$1"); 
         if(m.get(fallbackNoHyphen)!=null) return m.get(fallbackNoHyphen).toString();
@@ -138,15 +100,13 @@ public class AdvancedExcelProcessor {
         return "0";
     }
     
-    private void setNum(String ref, double val) {
-        Cell c = getCell(ref);
-        if (c != null) { c.setCellValue(val); }
+    protected void setNum(String ref, double val) {
+        Cell c = getCell(ref); if (c != null) { c.setCellValue(val); }
     }
-    private void setStr(String ref, String val) {
-        Cell c = getCell(ref);
-        if (c != null) c.setCellValue(val);
+    protected void setStr(String ref, String val) {
+        Cell c = getCell(ref); if (c != null) c.setCellValue(val);
     }
-    private Cell getCell(String ref) {
+    protected Cell getCell(String ref) {
         CellReference cr = new CellReference(ref);
         Row r = sheet.getRow(cr.getRow());
         if (r == null) r = sheet.createRow(cr.getRow());
@@ -155,15 +115,14 @@ public class AdvancedExcelProcessor {
         return c;
     }
     
-    private void writeExcel() throws IOException {
+    protected void writeExcel() throws IOException {
         workbook.setForceFormulaRecalculation(true);
         try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { 
-            workbook.write(fos); 
-            workbook.close(); 
+            workbook.write(fos); workbook.close(); 
         }
     }
     
-    private void copyFileToInputDirectory() throws IOException {
+    protected void copyFileToInputDirectory() throws IOException {
         Path dest = Paths.get(inputFilePath + File.separator + inputFileName + ExcelMapper.FILE_EXTENSION);
         if (Files.notExists(dest)) Files.createFile(dest);
         Files.copy(Paths.get(outFilePath + File.separator + fileName), dest, StandardCopyOption.REPLACE_EXISTING);
@@ -171,3 +130,193 @@ public class AdvancedExcelProcessor {
     public String getFileName() { return fileName; }
 }
 '@
+
+$companies = @("Ameriben", "Bcbsks", "Clover", "Emergient", "Ghc", "Ibx", "Iuhp", "Medstar", "Phc", "Quality", "Zing", "Default")
+
+foreach ($c in $companies) {
+    Write-Host "Creating ${c}ExcelProcessor..."
+    $content = @"
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("${c.ToLower()}ExcelProcessor")
+public class ${c}ExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("${c}".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("${c}".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+"@
+    Set-Content "$proj\excel\${c}ExcelProcessor.java" $content
+}
+
+Write-Host "Creating ExcelProcessorFactory..."
+Set-Content "$proj\excel\ExcelProcessorFactory.java" @'
+package com.healthproof.intplus.awscost.excel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ExcelProcessorFactory {
+    @Autowired
+    private ApplicationContext context;
+
+    public BaseExcelProcessor getProcessor(String companyName) {
+        String beanName = companyName.toLowerCase() + "ExcelProcessor";
+        try {
+            return (BaseExcelProcessor) context.getBean(beanName);
+        } catch (Exception e) {
+            System.out.println("No specific processor found for " + companyName + ". Using default.");
+            return (BaseExcelProcessor) context.getBean("defaultExcelProcessor");
+        }
+    }
+}
+'@
+
+Write-Host "Updating CostContorller.java..."
+Set-Content "$proj\contorller\CostContorller.java" @'
+package com.healthproof.intplus.awscost.contorller;
+import com.healthproof.intplus.awscost.*;
+import com.healthproof.intplus.awscost.awsDev.CostExplorerDev;
+import com.healthproof.intplus.awscost.excel.BaseExcelProcessor;
+import com.healthproof.intplus.awscost.excel.ExcelProcessorFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import java.io.*;
+import java.util.*;
+import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentTimeStamp;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_FILE_NAME;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_PATH;
+
+@RestController
+public class CostContorller {
+    @Autowired private ExcelProcessorFactory processorFactory;
+    @Autowired private CostExplorerDev costExplorerDev;
+    @Autowired private CredentialsReader credentialsReader;
+    @Value("${excel.output.file.path}") private String outFilePath;
+    
+    @GetMapping("/api/profiles")
+    public List<CompanyProfile> getProfiles() throws IOException { return credentialsReader.readProfiles(); }
+    
+    @PostMapping("/api/generate")
+    public Map<String, Serializable> generate(@RequestBody CostRequest request) throws Exception {
+        List<Model> models = new ArrayList<>();
+        Map<String, List<Map<String, Object>>> allRawData = new LinkedHashMap<>();
+        String ymStr = request.getYearMonth();
+        java.time.YearMonth ym;
+        if (ymStr == null || ymStr.trim().isEmpty() || ymStr.equalsIgnoreCase("DEFAULT")) {
+            ym = java.time.YearMonth.now().minusMonths(1);
+        } else {
+            ym = java.time.YearMonth.parse(ymStr.trim());
+        }
+        String startDate = ym.atDay(1).toString();
+        String endDate = ym.plusMonths(1).atDay(1).toString();
+        java.time.format.DateTimeFormatter formatMonthYear = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+        String monthYearName = ym.format(formatMonthYear).toUpperCase();
+        
+        for (int i = 0; i < request.getProfiles().size(); i++) {
+            String profile = request.getProfiles().get(i);
+            String env = request.getEnvironments().get(i);
+            costExplorerDev.start(profile, env, startDate, endDate);
+            models.add(costExplorerDev.getModel());
+            allRawData.put(profile, costExplorerDev.getRawQueriesData());
+        }
+        
+        // NEW: Get the isolated processor for this specific company!
+        BaseExcelProcessor excelProcessor = processorFactory.getProcessor(request.getCompanyName());
+        excelProcessor.start(request.getCompanyName(), request.getEnvironments(), models, monthYearName);
+        
+        saveRawDataJson(excelProcessor.getFileName(), allRawData);
+        return Map.of("id","1","message","Report generated!","code",200,
+                "timeStamp",getCurrentTimeStamp(),"fileName",excelProcessor.getFileName(),"status","success");
+    }
+    
+    private void saveRawDataJson(String excelFileName, Object data) {
+        try {
+            if (excelFileName == null || !excelFileName.contains(".")) return;
+            String jsonFileName = excelFileName.substring(0, excelFileName.lastIndexOf(".")) + ".json";
+            File jsonFile = new File(outFilePath + File.separator + jsonFileName);
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
+            System.out.println("Consolidated Raw AWS data saved to: " + jsonFile.getAbsolutePath());
+        } catch (Exception e) {
+            System.err.println("Failed to save raw AWS data JSON: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @GetMapping("/downloads/{filename}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
+        File file = new File(outFilePath + File.separator + filename);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(bos.toByteArray());
+        }
+    }
+    
+    @PostMapping("/downloads")
+    public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
+        File file = new File(OUTPUT_PATH + OUTPUT_FILE_NAME);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"report.xlsx\"")
+                    .body(bos.toByteArray());
+        }
+    }
+}
+'@
+
+Write-Host "SUCCESS: Created BaseExcelProcessor, ExcelProcessorFactory, updated CostContorller, and deployed 12 isolated company mappers!"
