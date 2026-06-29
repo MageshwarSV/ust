@@ -56,15 +56,18 @@ public class AdvancedExcelProcessor {
             if (sheet == null) { System.out.println("Sheet not found: "+sheetName); continue; }
             
             initSheet(companyName, env);
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
             writeR12(model.getModelMapR12(), companyName, env);
             writeR14(model.getModelMapR14(), companyName, env);
             writeR13(model.getModelMapR13(), companyName, env);
             writeESPCost();
-            writeH4H5(model.getModelMapH4H5(), companyName, env);
         }
         writeExcel(); copyFileToInputDirectory();
     }
+    
+    // THE FIX: equalsIgnoreCase instead of equals() to handle AmeriBen vs AMERIBEN mismatch!
     private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    
     private void initSheet(String c,String e){
         if(!check(c,e))return;
         setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
@@ -76,10 +79,9 @@ public class AdvancedExcelProcessor {
     }
     public void writeH4H5(Map m,String c,String e){
         if(!check(c,e))return;
-        double onDemand=0; Row r12=sheet.getRow(11); if(r12!=null){for(int i=1;i<=26;i++){Cell cl=r12.getCell(i);if(cl!=null)onDemand+=cl.getNumericCellValue();}}
-        double savings=0;  Row r13=sheet.getRow(12); if(r13!=null){for(int i=1;i<=26;i++){Cell cl=r13.getCell(i);if(cl!=null)savings+=cl.getNumericCellValue();}}
-        setNum("H4",new BigDecimal(onDemand).setScale(2,RoundingMode.HALF_UP).doubleValue());
-        setNum("H5",new BigDecimal(savings).setScale(2,RoundingMode.HALF_UP).doubleValue());
+        double tax = bd(val(m,"Tax"));
+        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax); // True AWS Usage + Tax
+        setNum("H5", bd(val(m,ExcelMapper.H5)));       // True AWS Savings
     }
     public void writeR12(Map m,String c,String e){
         if(!check(c,e))return;
