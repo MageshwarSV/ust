@@ -42,6 +42,7 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
         setNum("T12", bd(val(m, "Product$RDS-SERVER-3")));
         // --------------------------------------------------------
 
+        // FSx Volumes (On Demand Only)
         setNum("U12",bd(val(m,ExcelMapper.U12)));
         setNum("V12",bd(val(m,ExcelMapper.V12)));
         
@@ -54,7 +55,6 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
         setNum("W12",bd(val(m,ExcelMapper.W12)));
         setNum("Y12",bd(val(m,ExcelMapper.Y12)));
         
-        // For row 14, untagged RDS totals. Put in R14. 
         setNum("R14", bd(val(m, "Amazon Relational Database Service")));
         
         double otherAwsServices = 0;
@@ -89,9 +89,6 @@ public class MedstarExcelProcessor extends BaseExcelProcessor {
         setNum("T13", bd(val(m, "Product$RDS-SERVER-3")));
         // --------------------------------------------------------
 
-        setNum("U13",bd(val(m,ExcelMapper.U13)));
-        setNum("V13",bd(val(m,ExcelMapper.V13)));
-        
         setNum("Z13", bd(val(m, "Product$EM")));
     }
 }
