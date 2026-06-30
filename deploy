@@ -1,207 +1,197 @@
-S C:\Users\143500\Desktop\awscost\awscost> # ---- Fix Frontend UI (Month Selection Bug) ----
-PS C:\Users\143500\Desktop\awscost\awscost> Write-Host "Updating index2.html..."
-Updating index2.html...
-PS C:\Users\143500\Desktop\awscost\awscost> Set-Content "$proj\src\main\resources\static\index2.html" @'
->> <!DOCTYPE html>                                                                                                                                  
->> <html lang="en">                                                                                                                                 
->> <head>                                                                                                                                           
->>   <meta charset="UTF-8" />                                                                                                                       
->>   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>                                                                        
->>   <title>USTHP AWS Cost Report</title>                                                                                                           
->>   <style>                                                                                                                                        
->>     * { margin: 0; padding: 0; box-sizing: border-box; }                                                                                         
->>     body {                                                                                                                                       
->>       font-family: 'Segoe UI', sans-serif;                                                                                                       
->>       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);                                                                            
->>       min-height: 100vh;                                                                                                                         
->>       display: flex;                                                                                                                             
->>       flex-direction: column;                                                                                                                    
->>       align-items: center;                                                                                                                       
->>       padding: 40px 20px;                                                                                                                        
->>       color: #fff;                                                                                                                               
->>     }                                                                                                                                            
->>     .header { text-align: center; margin-bottom: 40px; }                                                                                         
->>     .header h1 {                                                                                                                                 
->>       font-size: 2rem; letter-spacing: 2px;                                                                                                      
->>       background: linear-gradient(90deg, #a78bfa, #60a5fa);                                                                                      
->>       -webkit-background-clip: text; -webkit-text-fill-color: transparent;                                                                       
->>     }                                                                                                                                            
->>     .header p { color: #94a3b8; margin-top: 8px; font-size: 0.95rem; }                                                                           
->>     .month-picker-container {                                                                                                                    
->>       margin-top: 20px;                                                                                                                          
->>       padding: 15px;                                                                                                                             
->>       background: rgba(255,255,255,0.05);                                                                                                        
->>       border-radius: 12px;                                                                                                                       
->>       border: 1px solid rgba(167,139,250,0.3);                                                                                                   
->>       display: inline-block;                                                                                                                     
->>     }                                                                                                                                            
->>     .month-picker-container label { font-weight: 600; margin-right: 10px; color: #a78bfa;}                                                       
->>     .month-picker-container input {                                                                                                              
->>       padding: 8px 12px;                                                                                                                         
->>       border-radius: 6px;                                                                                                                        
->>       border: none;                                                                                                                              
->>       outline: none;                                                                                                                             
->>       font-family: 'Segoe UI', sans-serif;                                                                                                       
->>       font-size: 1rem;                                                                                                                           
->>       background: #fff;                                                                                                                          
->>       color: #333;                                                                                                                               
->>       cursor: pointer;                                                                                                                           
->>     }                                                                                                                                            
->>     .buttons-container {                                                                                                                         
->>       display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;                                                                        
->>       max-width: 900px; width: 100%; margin-top: 20px;                                                                                           
->>     }                                                                                                                                            
->>     .company-card {                                                                                                                              
->>       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);                                                               
->>       border-radius: 16px; padding: 24px 30px; text-align: center;                                                                               
->>       cursor: pointer; transition: all 0.3s ease; min-width: 220px;                                                                              
->>       backdrop-filter: blur(10px);                                                                                                               
->>     }                                                                                                                                            
->>     .company-card:hover {                                                                                                                        
->>       background: rgba(167,139,250,0.15); border-color: #a78bfa;                                                                                 
->>       transform: translateY(-4px); box-shadow: 0 12px 30px rgba(167,139,250,0.3);                                                                
->>     }                                                                                                                                            
->>     .company-card.loading { pointer-events: none; opacity: 0.6; }                                                                                
->>     .company-name { font-size: 1.4rem; font-weight: 700; color: #a78bfa; margin-bottom: 8px; }                                                   
->>     .env-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }                                                             
->>     .env-tag {                                                                                                                                   
->>       background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3);                                                                 
->>       border-radius: 20px; padding: 3px 12px; font-size: 0.75rem;                                                                                
->>       color: #60a5fa; font-weight: 600;                                                                                                          
->>     }                                                                                                                                            
->>     .spinner {                                                                                                                                   
->>       display: inline-block; width: 18px; height: 18px;                                                                                          
->>       border: 2px solid rgba(255,255,255,0.3); border-top-color: #a78bfa;                                                                        
->>       border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 10px;                                                                
->>     }                                                                                                                                            
->>     @keyframes spin { to { transform: rotate(360deg); } }                                                                                        
->>     .status-box {                                                                                                                                
->>       margin-top: 36px; max-width: 600px; width: 100%;                                                                                           
->>       border-radius: 12px; padding: 20px 24px; display: none; font-size: 0.95rem;                                                                
->>     }                                                                                                                                            
->>     .status-box.success { display: block; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34d399; }            
->>     .status-box.error { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }            
->>     .download-btn {                                                                                                                              
->>       display: inline-block; margin-top: 12px; padding: 10px 24px;                                                                               
->>       background: linear-gradient(90deg, #a78bfa, #60a5fa); border-radius: 8px;                                                                  
->>       color: #fff; font-weight: 600; text-decoration: none; transition: opacity 0.2s;                                                            
->>     }                                                                                                                                            
->>     .download-btn:hover { opacity: 0.85; }                                                                                                       
->>     .loading-msg { color: #94a3b8; margin-top: 30px; font-size: 0.9rem; }                                                                        
->>   </style>                                                                                                                                       
->> </head>                                                                                                                                          
->> <body>                                                                                                                                           
->>   <div class="header">                                                                                                                           
->>     <h1>USTHP AWS Cost Report</h1>                                                                                                               
->>     <p>Select a company to generate the monthly cost report</p>                                                                                  
->>                                                                                                                                                  
->>     <!-- NEW: Billing Month Selector -->                                                                                                         
->>     <div class="month-picker-container">                                                                                                         
->>         <label for="billingMonth">Select Billing Month:</label>                                                                                  
->>         <input type="month" id="billingMonth" />                                                                                                 
->>     </div>                                                                                                                                       
->>   </div>                                                                                                                                         
->>                                                                                                                                                  
->>   <div class="buttons-container" id="buttonsContainer">                                                                                          
->>     <p class="loading-msg">Loading companies...</p>                                                                                              
->>   </div>                                                                                                                                         
->>                                                                                                                                                  
->>   <div class="status-box" id="statusBox"></div>                                                                                                  
->>                                                                                                                                                  
->>   <script>                                                                                                                                       
->>     const BASE = '';                                                                                                                             
->>                                                                                                                                                  
->>     // Auto-set the dropdown to last month by default                                                                                            
->>     document.addEventListener("DOMContentLoaded", () => {                                                                                        
->>         const d = new Date();                                                                                                                    
->>         d.setMonth(d.getMonth() - 1);                                                                                                            
->>         const yyyy = d.getFullYear();                                                                                                            
->>         const mm = String(d.getMonth() + 1).padStart(2, '0');                                                                                    
->>         document.getElementById('billingMonth').value = `${yyyy}-${mm}`;                                                                         
->>     });                                                                                                                                          
->>                                                                                                                                                  
->>     async function loadProfiles() {                                                                                                              
->>       try {                                                                                                                                      
->>         const res = await fetch(BASE + '/awscost/api/profiles');                                                                                 
->>         const profiles = await res.json();                                                                                                       
->>         const container = document.getElementById('buttonsContainer');                                                                           
->>         container.innerHTML = '';                                                                                                                
->>         if (!profiles || profiles.length === 0) {                                                                                                
->>           container.innerHTML = '<p class="loading-msg">No companies found in credentials file.</p>';                                            
->>           return;                                                                                                                                
->>         }                                                                                                                                        
->>         profiles.forEach(p => {                                                                                                                  
->>           const card = document.createElement('div');                                                                                            
->>           card.className = 'company-card';                                                                                                       
->>           card.id = 'card-' + p.companyName;                                                                                                     
->>           card.innerHTML = `                                                                                                                     
->>             <div class="company-name">${p.companyName}</div>                                                                                     
->>             <div class="env-tags">                                                                                                               
->>               ${p.environments.map(e => `<span class="env-tag">${e}</span>`).join('')}                                                           
->>             </div>`;                                                                                                                             
->>           card.addEventListener('click', () => generateReport(p, card));                                                                         
->>           container.appendChild(card);                                                                                                           
->>         });                                                                                                                                      
->>       } catch (e) {                                                                                                                              
->>         document.getElementById('buttonsContainer').innerHTML =                                                                                  
->>           '<p class="loading-msg" style="color:#f87171">Failed to load profiles. Is the server running?</p>';                                    
->>       }                                                                                                                                          
->>     }                                                                                                                                            
->>                                                                                                                                                  
->>     async function generateReport(profile, card) {                                                                                               
->>       const statusBox = document.getElementById('statusBox');                                                                                    
->>       const selectedMonth = document.getElementById('billingMonth').value; // e.g. "2026-04"                                                     
->>                                                                                                                                                  
->>       card.classList.add('loading');                                                                                                             
->>       card.innerHTML += '<div class="spinner"></div>';                                                                                           
->>       statusBox.className = 'status-box';                                                                                                        
->>       statusBox.innerHTML = '';                                                                                                                  
->>                                                                                                                                                  
->>       // Create payload to send to Java backend                                                                                                  
->>       const payload = {                                                                                                                          
->>         companyName: profile.companyName,                                                                                                        
->>         environments: profile.environments,                                                                                                      
->>         profiles: profile.profiles,                                                                                                              
->>         yearMonth: selectedMonth // <--- THIS FIXES THE BUG!                                                                                     
->>       };                                                                                                                                         
->>                                                                                                                                                  
->>       try {                                                                                                                                      
->>         const res = await fetch(BASE + '/awscost/api/generate', {                                                                                
->>           method: 'POST',                                                                                                                        
->>           headers: { 'Content-Type': 'application/json' },                                                                                       
->>           body: JSON.stringify(payload)                                                                                                          
->>         });                                                                                                                                      
->>         const data = await res.json();                                                                                                           
->>         if (res.ok && data.status === 'success') {                                                                                               
->>           statusBox.className = 'status-box success';                                                                                            
->>           statusBox.innerHTML = `                                                                                                                
->>             <strong>&#10003; Report Generated!</strong><br/>                                                                                     
->>             File: <strong>${data.fileName}</strong><br/>                                                                                         
->>             <a class="download-btn" href="${BASE}/awscost/downloads/${data.fileName}">                                                           
->>               &#8595; Download Excel                                                                                                             
->>             </a>`;                                                                                                                               
->>         } else {                                                                                                                                 
->>           throw new Error(data.message || 'Generation failed');                                                                                  
->>         }                                                                                                                                        
->>       } catch (e) {                                                                                                                              
->>         statusBox.className = 'status-box error';                                                                                                
->>         statusBox.innerHTML = '<strong>&#10007; Error:</strong> ' + e.message;                                                                   
->>       } finally {                                                                                                                                
->>         await loadProfiles();                                                                                                                    
->>       }                                                                                                                                          
->>     }                                                                                                                                            
->>                                                                                                                                                  
->>     loadProfiles();                                                                                                                              
->>   </script>                                                                                                                                      
->> </body>                                                                                                                                          
->> </html>                                                                                                                                          
->> '@
-Set-Content : Could not find a part of the path 
-'C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\src\main\resources\static\index2.html'.
-At line:1 char:1
-+ Set-Content "$proj\src\main\resources\static\index2.html" @'
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : ObjectNotFound: (C:\Users\143500...tic\index2.html:String) [Set-Content], DirectoryNotFoundException
-    + FullyQualifiedErrorId : GetContentWriterDirectoryNotFoundError,Microsoft.PowerShell.Commands.SetContentCommand
- 
-PS C:\Users\143500\Desktop\awscost\awscost> 
+# ---- Fix Frontend UI (Month Selection Bug) ----
+Write-Host "Updating index2.html..."
+Set-Content "C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\index2.html" @'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USTHP AWS Cost Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #fff;
+    }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 {
+      font-size: 2rem; letter-spacing: 2px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header p { color: #94a3b8; margin-top: 8px; font-size: 0.95rem; }
+    .month-picker-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(167,139,250,0.3);
+      display: inline-block;
+    }
+    .month-picker-container label { font-weight: 600; margin-right: 10px; color: #a78bfa;}
+    .month-picker-container input {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+    .buttons-container {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      max-width: 900px; width: 100%; margin-top: 20px;
+    }
+    .company-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 24px 30px; text-align: center;
+      cursor: pointer; transition: all 0.3s ease; min-width: 220px;
+      backdrop-filter: blur(10px);
+    }
+    .company-card:hover {
+      background: rgba(167,139,250,0.15); border-color: #a78bfa;
+      transform: translateY(-4px); box-shadow: 0 12px 30px rgba(167,139,250,0.3);
+    }
+    .company-card.loading { pointer-events: none; opacity: 0.6; }
+    .company-name { font-size: 1.4rem; font-weight: 700; color: #a78bfa; margin-bottom: 8px; }
+    .env-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .env-tag {
+      background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3);
+      border-radius: 20px; padding: 3px 12px; font-size: 0.75rem;
+      color: #60a5fa; font-weight: 600;
+    }
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #a78bfa;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-box {
+      margin-top: 36px; max-width: 600px; width: 100%;
+      border-radius: 12px; padding: 20px 24px; display: none; font-size: 0.95rem;
+    }
+    .status-box.success { display: block; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34d399; }
+    .status-box.error { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+    .download-btn {
+      display: inline-block; margin-top: 12px; padding: 10px 24px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa); border-radius: 8px;
+      color: #fff; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+    }
+    .download-btn:hover { opacity: 0.85; }
+    .loading-msg { color: #94a3b8; margin-top: 30px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>USTHP AWS Cost Report</h1>
+    <p>Select a company to generate the monthly cost report</p>
+    
+    <!-- NEW: Billing Month Selector -->
+    <div class="month-picker-container">
+        <label for="billingMonth">Select Billing Month:</label>
+        <input type="month" id="billingMonth" />
+    </div>
+  </div>
+
+  <div class="buttons-container" id="buttonsContainer">
+    <p class="loading-msg">Loading companies...</p>
+  </div>
+
+  <div class="status-box" id="statusBox"></div>
+
+  <script>
+    const BASE = '';
+
+    // Auto-set the dropdown to last month by default
+    document.addEventListener("DOMContentLoaded", () => {
+        const d = new Date();
+        d.setMonth(d.getMonth() - 1);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        document.getElementById('billingMonth').value = `${yyyy}-${mm}`;
+    });
+
+    async function loadProfiles() {
+      try {
+        const res = await fetch(BASE + '/awscost/api/profiles');
+        const profiles = await res.json();
+        const container = document.getElementById('buttonsContainer');
+        container.innerHTML = '';
+        if (!profiles || profiles.length === 0) {
+          container.innerHTML = '<p class="loading-msg">No companies found in credentials file.</p>';
+          return;
+        }
+        profiles.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'company-card';
+          card.id = 'card-' + p.companyName;
+          card.innerHTML = `
+            <div class="company-name">${p.companyName}</div>
+            <div class="env-tags">
+              ${p.environments.map(e => `<span class="env-tag">${e}</span>`).join('')}
+            </div>`;
+          card.addEventListener('click', () => generateReport(p, card));
+          container.appendChild(card);
+        });
+      } catch (e) {
+        document.getElementById('buttonsContainer').innerHTML =
+          '<p class="loading-msg" style="color:#f87171">Failed to load profiles. Is the server running?</p>';
+      }
+    }
+
+    async function generateReport(profile, card) {
+      const statusBox = document.getElementById('statusBox');
+      const selectedMonth = document.getElementById('billingMonth').value; // e.g. "2026-04"
+      
+      card.classList.add('loading');
+      card.innerHTML += '<div class="spinner"></div>';
+      statusBox.className = 'status-box';
+      statusBox.innerHTML = '';
+
+      // Create payload to send to Java backend
+      const payload = {
+        companyName: profile.companyName,
+        environments: profile.environments,
+        profiles: profile.profiles,
+        yearMonth: selectedMonth // <--- THIS FIXES THE BUG!
+      };
+
+      try {
+        const res = await fetch(BASE + '/awscost/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          statusBox.className = 'status-box success';
+          statusBox.innerHTML = `
+            <strong>&#10003; Report Generated!</strong><br/>
+            File: <strong>${data.fileName}</strong><br/>
+            <a class="download-btn" href="${BASE}/awscost/downloads/${data.fileName}">
+              &#8595; Download Excel
+            </a>`;
+        } else {
+          throw new Error(data.message || 'Generation failed');
+        }
+      } catch (e) {
+        statusBox.className = 'status-box error';
+        statusBox.innerHTML = '<strong>&#10007; Error:</strong> ' + e.message;
+      } finally {
+        await loadProfiles(); 
+      }
+    }
+
+    loadProfiles();
+  </script>
+</body>
+</html>
+'@
