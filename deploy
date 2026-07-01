@@ -12,68 +12,60 @@ if (!(Test-Path "$static")) { New-Item -ItemType Directory -Force -Path "$static
 # ---- 1. CompanyProfile.java ----
 Set-Content "$proj\CompanyProfile.java" @'
 package com.healthproof.intplus.awscost;
+import java.util.ArrayList;
 import java.util.List;
 public class CompanyProfile {
     private String companyName;
-    private List<String> profiles;
-    private List<String> environments;
-    public CompanyProfile(String companyName, List<String> profiles, List<String> environments) {
-        this.companyName = companyName; this.profiles = profiles; this.environments = environments;
-    }
+    private List<String> environments = new ArrayList<>();
+    private List<String> profiles = new ArrayList<>();
+    public CompanyProfile(String companyName) { this.companyName = companyName; }
     public String getCompanyName() { return companyName; }
-    public void setCompanyName(String companyName) { this.companyName = companyName; }
-    public List<String> getProfiles() { return profiles; }
-    public void setProfiles(List<String> profiles) { this.profiles = profiles; }
     public List<String> getEnvironments() { return environments; }
-    public void setEnvironments(List<String> environments) { this.environments = environments; }
+    public List<String> getProfiles() { return profiles; }
+    public void addEnvironment(String env) { environments.add(env); }
+    public void addProfile(String profile) { profiles.add(profile); }
 }
 '@
 
 # ---- 2. CredentialsReader.java ----
 Set-Content "$proj\CredentialsReader.java" @'
 package com.healthproof.intplus.awscost;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
-@Component
+@Service
 public class CredentialsReader {
-    @Value("${aws.credentials.path:}") private String customPath;
+    private String getCredentialsFilePath() {
+        return System.getProperty("user.home") + File.separator + ".aws" + File.separator + "credentials";
+    }
     public List<CompanyProfile> readProfiles() throws IOException {
-        Path path = customPath != null && !customPath.trim().isEmpty() ? Paths.get(customPath) : Paths.get(System.getProperty("user.home"), ".aws", "credentials");
-        if (Files.notExists(path)) throw new FileNotFoundException("AWS credentials file not found at " + path);
-        
-        Map<String, Map<String, String>> profilesMap = new LinkedHashMap<>();
-        String currentProfile = null;
-        for (String line : Files.readAllLines(path)) {
-            line = line.trim();
-            if (line.startsWith("[") && line.endsWith("]")) {
-                currentProfile = line.substring(1, line.length() - 1);
-                profilesMap.put(currentProfile, new HashMap<>());
-            } else if (currentProfile != null && line.contains("=")) {
-                String[] parts = line.split("=", 2);
-                profilesMap.get(currentProfile).put(parts[0].trim().toLowerCase(), parts[1].trim());
+        Map<String, Map<String, String>> raw = new LinkedHashMap<>();
+        String cur = null;
+        try (BufferedReader r = new BufferedReader(new FileReader(getCredentialsFilePath()))) {
+            String line;
+            while ((line = r.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("[") && line.endsWith("]")) {
+                    cur = line.substring(1, line.length() - 1);
+                    raw.put(cur, new LinkedHashMap<>());
+                } else if (cur != null && line.contains("=")) {
+                    String[] p = line.split("=", 2);
+                    raw.get(cur).put(p[0].trim().toLowerCase(), p[1].trim());
+                }
             }
         }
-        
-        Map<String, List<String>> companyProfiles = new LinkedHashMap<>();
-        Map<String, List<String>> companyEnvs = new LinkedHashMap<>();
-        for (Map.Entry<String, Map<String, String>> entry : profilesMap.entrySet()) {
-            String profileName = entry.getKey();
-            Map<String, String> attrs = entry.getValue();
-            String comp = attrs.get("company_name");
-            String env = attrs.get("environment");
-            if (comp != null && env != null) {
-                String normComp = comp.toUpperCase();
-                companyProfiles.computeIfAbsent(normComp, k -> new ArrayList<>()).add(profileName);
-                companyEnvs.computeIfAbsent(normComp, k -> new ArrayList<>()).add(env.toUpperCase());
+        Map<String, CompanyProfile> grouped = new LinkedHashMap<>();
+        for (Map.Entry<String, Map<String, String>> e : raw.entrySet()) {
+            String pn = e.getKey();
+            String cn = e.getValue().get("company_name");
+            String ev = e.getValue().get("environment");
+            if (cn != null && ev != null) {
+                grouped.computeIfAbsent(cn, CompanyProfile::new);
+                grouped.get(cn).addEnvironment(ev.toUpperCase());
+                grouped.get(cn).addProfile(pn);
             }
         }
-        
-        List<CompanyProfile> result = new ArrayList<>();
-        companyProfiles.forEach((k, v) -> result.add(new CompanyProfile(k, v, companyEnvs.get(k))));
-        return result;
+        return new ArrayList<>(grouped.values());
     }
 }
 '@
@@ -81,20 +73,59 @@ public class CredentialsReader {
 # ---- 3. CostRequest.java ----
 Set-Content "$proj\CostRequest.java" @'
 package com.healthproof.intplus.awscost;
+
 import java.util.List;
+
 public class CostRequest {
     private String companyName;
-    private List<String> profiles;
     private List<String> environments;
+    private List<String> profiles;
+
+    private String environment;
+    private String accountName;
+    private String espCost;
     private String yearMonth;
-    public String getCompanyName() { return companyName; }
-    public void setCompanyName(String companyName) { this.companyName = companyName; }
-    public List<String> getProfiles() { return profiles; }
-    public void setProfiles(List<String> profiles) { this.profiles = profiles; }
+
+    public String getCompanyName() {
+        return companyName != null ? companyName : "IBX";
+    }
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public List<String> getEnvironments() { return environments; }
     public void setEnvironments(List<String> environments) { this.environments = environments; }
-    public String getYearMonth() { return yearMonth; }
-    public void setYearMonth(String yearMonth) { this.yearMonth = yearMonth; }
+
+    public List<String> getProfiles() { return profiles; }
+    public void setProfiles(List<String> profiles) { this.profiles = profiles; }
+
+    public String getEnvironment() {
+        return environment != null ? environment : "DEV";
+    }
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
+    public String getAccountName() {
+        return accountName != null ? accountName : "IBX";
+    }
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getEspCost() {
+        return espCost != null ? espCost : "0";
+    }
+    public void setEspCost(String espCost) {
+        this.espCost = espCost;
+    }
+
+    public String getYearMonth() {
+        return yearMonth;
+    }
+    public void setYearMonth(String yearMonth) {
+        this.yearMonth = yearMonth;
+    }
 }
 '@
 
@@ -103,82 +134,88 @@ Set-Content "$proj\awsDev\CostExplorerDev.java" @'
 package com.healthproof.intplus.awscost.awsDev;
 import com.healthproof.intplus.awscost.Model;
 import com.healthproof.intplus.awscost.util.ExcelMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.http.SdkHttpConfigurationOption;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
 import software.amazon.awssdk.services.costexplorer.model.*;
-import java.math.*;
-import java.util.*;
-
-@Component
+import software.amazon.awssdk.thirdparty.jackson.core.JsonProcessingException;
+import software.amazon.awssdk.utils.AttributeMap;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentDate;
+import static com.healthproof.intplus.awscost.util.DateUtil.getPreviousDate;
+@Service
 public class CostExplorerDev {
-    private Model model;
     private CostExplorerClient caClient;
+    private Model model;
+    private List<Map<String, Object>> rawQueriesData;
     private String startDate;
     private String endDate;
-    private List<Map<String, Object>> rawQueriesData;
-
-    public void start(String profileName, String environment, String startDate, String endDate) {
-        this.model = new Model();
+    public Model getModel() { return model; }
+    public List<Map<String, Object>> getRawQueriesData() { return rawQueriesData; }
+    public void start(String profileName, String environment, String startDate, String endDate) throws Exception {
+        this.rawQueriesData = new ArrayList<>();
         this.startDate = startDate;
         this.endDate = endDate;
-        this.rawQueriesData = new ArrayList<>();
-        
-        System.out.println("Querying AWS Cost Explorer for profile: " + profileName + " [" + startDate + " to " + endDate + "]");
-        this.caClient = CostExplorerClient.builder()
-                .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create(profileName))
-                .build();
-                
+        init(profileName);
         getH4andH5(); getR12Values(); getNoTagAndCloudWatch(); calculateCommonService(); getRow13Values();
+        System.out.println("********----->: Profile=" + profileName + " | Env=" + environment);
+        model.printR12(); model.printR13(); model.printH4H5(); model.printR14();
     }
-
-    private void getH4andH5() {
+    private void init(String profileName) throws JsonProcessingException {
+        this.model = new Model();
+        caClient = CostExplorerClient.builder()
+                .credentialsProvider(ProfileCredentialsProvider.create(profileName))
+                .region(software.amazon.awssdk.regions.Region.US_EAST_1)
+                .httpClient(ApacheHttpClient.builder().buildWithDefaults(AttributeMap.builder()
+                        .put(SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES, Boolean.TRUE).build()))
+                .build();
+    }
+    public void getH4andH5() {
         GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
                 .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
-                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").build();
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("RECORD_TYPE").build()).build();
         GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
         recordRawResponse("H4_H5", res);
-        res.resultsByTime().forEach(r -> r.total().forEach((k, v) -> model.getModelMapH4H5().put(k, v.amount())));
-        
-        GetCostAndUsageRequest reqTax = GetCostAndUsageRequest.builder()
-                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
-                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
-                .filter(Filter.builder().service(ServiceSpecification.builder().values("Tax").build()).build()).build();
-        GetCostAndUsageResponse resTax = caClient.getCostAndUsage(reqTax);
-        recordRawResponse("Tax", resTax);
-        resTax.resultsByTime().forEach(r -> r.total().forEach((k, v) -> model.getModelMapH4H5().put("Tax", v.amount())));
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapH4H5().put(g.keys().get(0), v.amount()))));
     }
-
-    private void getR12Values() {
+    public void getR12Values() throws JsonProcessingException {
+        Expression ex = Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build();
         GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
                 .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
-                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
                 .groupBy(GroupDefinition.builder().type(GroupDefinitionType.TAG).key("Product").build()).build();
         GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
         recordRawResponse("R12", res);
         res.resultsByTime().forEach(r -> r.groups().forEach(g ->
                 g.metrics().forEach((k, v) -> model.getModelMapR12().put(g.keys().get(0), v.amount()))));
     }
-
-    private void getNoTagAndCloudWatch() {
+    public void getNoTagAndCloudWatch() {
+        Expression ex = Expression.builder().and(
+                Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                        .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build(),
+                Expression.builder().tags(TagValues.builder().key("Product").values("").build()).build()).build();
         GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
                 .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
-                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
                 .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("SERVICE").build()).build();
         GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
         recordRawResponse("R14", res);
         res.resultsByTime().forEach(r -> r.groups().forEach(g ->
                 g.metrics().forEach((k, v) -> model.getModelMapR14().put(g.keys().get(0), v.amount()))));
     }
-
-    private void getRow13Values() {
-        Expression ex = Expression.builder().and(
-                Expression.builder().dimensions(DimensionValues.builder().key(Dimension.RECORD_TYPE)
-                        .values("SavingsPlanCoveredUsage").build()).build(),
-                Expression.builder().dimensions(DimensionValues.builder().key(Dimension.TERM)
-                        .values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build();
+    public void getRow13Values() {
+        Expression ex = Expression.builder().dimensions(DimensionValues.builder().key(Dimension.RECORD_TYPE)
+                .values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build();
         GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
                 .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
                 .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
@@ -188,7 +225,6 @@ public class CostExplorerDev {
         res.resultsByTime().forEach(r -> r.groups().forEach(g ->
                 g.metrics().forEach((k, v) -> model.getModelMapR13().put(g.keys().get(0), v.amount()))));
     }
-
     private void calculateCommonService() {
         Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);
         Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);
@@ -199,7 +235,6 @@ public class CostExplorerDev {
         double ec2 = total - new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue() + common;
         model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));
     }
-
     private void recordRawResponse(String queryName, GetCostAndUsageResponse response) {
         Map<String, Object> queryRecord = new LinkedHashMap<>();
         queryRecord.put("queryType", queryName);
@@ -214,29 +249,23 @@ public class CostExplorerDev {
                     for (Group group : result.groups()) {
                         Map<String, Object> groupRecord = new LinkedHashMap<>();
                         groupRecord.put("keys", group.keys());
-                        Map<String, String> metricsRecord = new HashMap<>();
+                        Map<String, Map<String, String>> metrics = new LinkedHashMap<>();
                         if (group.metrics() != null) {
-                            group.metrics().forEach((k, v) -> metricsRecord.put(k, v.amount()));
+                            group.metrics().forEach((k, v) -> {
+                                metrics.put(k, Map.of("amount", v.amount(), "unit", v.unit()));
+                            });
                         }
-                        groupRecord.put("metrics", metricsRecord);
+                        groupRecord.put("metrics", metrics);
                         groups.add(groupRecord);
                     }
                 }
                 timeRecord.put("groups", groups);
-                Map<String, String> totalRecord = new HashMap<>();
-                if (result.total() != null) {
-                    result.total().forEach((k, v) -> totalRecord.put(k, v.amount()));
-                }
-                timeRecord.put("total", totalRecord);
                 results.add(timeRecord);
             }
         }
-        queryRecord.put("resultsByTime", results);
+        queryRecord.put("results", results);
         rawQueriesData.add(queryRecord);
     }
-
-    public Model getModel() { return model; }
-    public List<Map<String, Object>> getRawQueriesData() { return rawQueriesData; }
 }
 '@
 
@@ -255,18 +284,14 @@ import java.util.*;
 import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentTimeStamp;
 import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_FILE_NAME;
 import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_PATH;
-
 @RestController
-@CrossOrigin(origins = "*")
 public class CostContorller {
     @Autowired private AdvancedExcelProcessor excelProcessor;
     @Autowired private CostExplorerDev costExplorerDev;
     @Autowired private CredentialsReader credentialsReader;
     @Value("${excel.output.file.path}") private String outFilePath;
-    
     @GetMapping("/api/profiles")
     public List<CompanyProfile> getProfiles() throws IOException { return credentialsReader.readProfiles(); }
-    
     @PostMapping("/api/generate")
     public Map<String, Serializable> generate(@RequestBody CostRequest request) throws Exception {
         List<Model> models = new ArrayList<>();
@@ -282,7 +307,6 @@ public class CostContorller {
         String endDate = ym.plusMonths(1).atDay(1).toString();
         java.time.format.DateTimeFormatter formatMonthYear = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
         String monthYearName = ym.format(formatMonthYear).toUpperCase();
-        
         for (int i = 0; i < request.getProfiles().size(); i++) {
             String profile = request.getProfiles().get(i);
             String env = request.getEnvironments().get(i);
@@ -290,14 +314,11 @@ public class CostContorller {
             models.add(costExplorerDev.getModel());
             allRawData.put(profile, costExplorerDev.getRawQueriesData());
         }
-        
         excelProcessor.start(request.getCompanyName(), request.getEnvironments(), models, monthYearName);
         saveRawDataJson(excelProcessor.getFileName(), allRawData);
-        
         return Map.of("id","1","message","Report generated!","code",200,
                 "timeStamp",getCurrentTimeStamp(),"fileName",excelProcessor.getFileName(),"status","success");
     }
-    
     private void saveRawDataJson(String excelFileName, Object data) {
         try {
             if (excelFileName == null || !excelFileName.contains(".")) return;
@@ -311,7 +332,6 @@ public class CostContorller {
             e.printStackTrace();
         }
     }
-    
     @GetMapping("/downloads/{filename}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
         File file = new File(outFilePath + File.separator + filename);
@@ -324,7 +344,6 @@ public class CostContorller {
                     .body(bos.toByteArray());
         }
     }
-    
     @PostMapping("/downloads")
     public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
         File file = new File(OUTPUT_PATH + OUTPUT_FILE_NAME);
@@ -349,87 +368,60 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import java.io.*;
 import java.math.*;
 import java.nio.file.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import static com.healthproof.intplus.awscost.util.DateUtil.getRequiredDate;
-
-@Component
+@Service
 public class AdvancedExcelProcessor {
     @Value("${excel.template.file.path}") private String templateFilePath;
     @Value("${excel.template.file.name}") private String templateFileName;
     @Value("${excel.input.file.path}") private String inputFilePath;
     @Value("${excel.input.file.name}") private String inputFileName;
     @Value("${excel.output.file.path}") private String outFilePath;
-    
-    private Workbook workbook;
-    private Sheet sheet;
-    private String fileName;
-    
+    private Workbook workbook; private String fileName; private Sheet sheet;
+    public String getFileName() { return fileName; }
     public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
-        String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
-        File outputDir = new File(outFilePath);
-        if (!outputDir.exists()) outputDir.mkdirs();
-        File[] existing = outputDir.listFiles((d, n) -> n.startsWith(basePattern) && n.endsWith(ExcelMapper.FILE_EXTENSION));
-        int version = 1;
-        if (existing != null) {
-            for (File f : existing) {
-                try {
-                    int x = Integer.parseInt(f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length()));
-                    if (x >= version) version = x + 1;
-                } catch (Exception ignored) {}
-            }
+        String tp = templateFilePath+File.separator+companyName.toLowerCase()+"_"+templateFileName+ExcelMapper.FILE_EXTENSION;
+        if (!new File(tp).exists()) {
+            tp = templateFilePath+File.separator+templateFileName+ExcelMapper.FILE_EXTENSION;
         }
-        this.fileName = basePattern + version + ExcelMapper.FILE_EXTENSION;
-        
-        String tplPath = templateFilePath + File.separator + companyName.toLowerCase() + "_" + templateFileName + ExcelMapper.FILE_EXTENSION;
-        File tplFile = new File(tplPath);
-        if (!tplFile.exists()) tplPath = templateFilePath + File.separator + templateFileName + ExcelMapper.FILE_EXTENSION;
-        try (FileInputStream fis = new FileInputStream(tplPath)) { this.workbook = new XSSFWorkbook(fis); }
-
+        try (InputStream fis = new FileInputStream(tp)) { workbook = new XSSFWorkbook(fis); workbook.setForceFormulaRecalculation(true); }
         for (int i = 0; i < environments.size(); i++) {
             String env = environments.get(i); Model model = models.get(i);
             sheet = workbook.getSheet(companyName.toUpperCase()+"-"+env.toUpperCase());
-            if (sheet == null) {
-                for(int s=0; s<workbook.getNumberOfSheets(); s++){
-                    if(workbook.getSheetName(s).equalsIgnoreCase(companyName+"-"+env)){ sheet = workbook.getSheetAt(s); break; }
-                }
-            }
-            if (sheet == null) { System.out.println("Sheet not found: "+companyName+"-"+env); continue; }
-            
+            if (sheet == null) { System.out.println("Sheet not found: "+companyName.toUpperCase()+"-"+env.toUpperCase()); continue; }
             initSheet(companyName, env);
-            writeH4H5(model.getModelMapH4H5(), companyName, env);
             writeR12(model.getModelMapR12(), companyName, env);
             writeR14(model.getModelMapR14(), companyName, env);
             writeR13(model.getModelMapR13(), companyName, env);
             writeESPCost();
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
         }
+        this.fileName = generateVersionedFileName(companyName, monthYearName);
         writeExcel(); copyFileToInputDirectory();
     }
-    
-    private boolean checkSheetName(String c, String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
-    
-    private void initSheet(String c, String e) {
-        if (!checkSheetName(c, e)) return;
-        setStr("H3", getRequiredDate());
-        setCellNumericValue("H4", 0);
-        setCellNumericValue("H5", 0);
-        setCellNumericValue("H6", 0);
-        for (int i = 1; i < 26; i++) { // Clear standard mapped cells, leaving column AA (26) untouched
-            if (sheet.getRow(11) != null && sheet.getRow(11).getCell(i) != null) sheet.getRow(11).getCell(i).setCellValue(0);
-            if (sheet.getRow(12) != null && sheet.getRow(12).getCell(i) != null) sheet.getRow(12).getCell(i).setCellValue(0);
-            if (sheet.getRow(13) != null && sheet.getRow(13).getCell(i) != null) sheet.getRow(13).getCell(i).setCellValue(0);
-        }
+    private String generateVersionedFileName(String companyName, String monthYearName) {
+        String base = "USTHP_"+companyName+"_AWS_SERVICE_COST_"+monthYearName+"-V";
+        File[] ex = new File(outFilePath).listFiles((d,n)->n.startsWith(base)&&n.endsWith(ExcelMapper.FILE_EXTENSION));
+        int v=1; if(ex!=null) for(File f:ex){try{int x=Integer.parseInt(f.getName().substring(base.length(),f.getName().length()-ExcelMapper.FILE_EXTENSION.length()));if(x>=v)v=x+1;}catch(Exception ignored){}}
+        return base+v+ExcelMapper.FILE_EXTENSION;
     }
-    
-    public void writeH4H5(Map h4h5Map, String companyName, String environment) {
-        if (!checkSheetName(companyName, environment)) return;
-        setCellNumericValue("H4", bd(getMapValue(h4h5Map, ExcelMapper.H4)));
-        setCellNumericValue("H5", bd(getMapValue(h4h5Map, ExcelMapper.H5)));
+    private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    private void initSheet(String c,String e){
+        if(!check(c,e))return;
+        setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
+        for(int i=1;i<27;i++){sheet.getRow(11).getCell(i).setCellValue(0);sheet.getRow(12).getCell(i).setCellValue(0);sheet.getRow(13).getCell(i).setCellValue(0);}
     }
-    
+    public void writeH4H5(Map m,String c,String e){
+        if(!check(c,e))return;
+        double tax = bd(val(m,"Tax"));
+        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
+        setNum("H5", bd(val(m,ExcelMapper.H5)));
+    }
     public void writeR12(Map m,String c,String e){
         if(!check(c,e))return;
         setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
@@ -461,41 +453,6 @@ public class AdvancedExcelProcessor {
         try(FileOutputStream fos=new FileOutputStream(outFilePath+File.separator+fileName)){workbook.write(fos);workbook.close();}
     }
     private void copyFileToInputDirectory() throws IOException{Path dest=Paths.get(inputFilePath+File.separator+inputFileName+ExcelMapper.FILE_EXTENSION);if(Files.notExists(dest))Files.createFile(dest);Files.copy(Paths.get(outFilePath+File.separator+fileName),dest,StandardCopyOption.REPLACE_EXISTING);}
-    
-    private boolean check(String c, String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
-    
-    private String getMapValue(Map<String, String> map, String key) {
-        if (key == null) return "0";
-        if (map.get(key) != null) return map.get(key).toString();
-        
-        String strippedKey = key.startsWith("Product$") ? key.substring("Product$".length()) : key;
-        if (map.get(strippedKey) != null) return map.get(strippedKey).toString();
-        if (map.get("Product$" + key) != null) return map.get("Product$" + key).toString();
-        
-        String normK = strippedKey.toLowerCase().replace("-", "").replace(" ", "");
-        for (String mk : map.keySet()) {
-            String strippedMk = mk.startsWith("Product$") ? mk.substring("Product$".length()) : mk;
-            String normMk = strippedMk.toLowerCase().replace("-", "").replace(" ", "");
-            if (normK.equals(normMk)) {
-                return map.get(mk).toString();
-            }
-        }
-        return "0";
-    }
-    
-    private void setCellNumericValue(String ref, double val) {
-        Cell c = getCell(ref);
-        if (c != null) { c.setCellValue(val); }
-    }
-    
-    private Cell getCell(String ref) {
-        CellReference cr = new CellReference(ref);
-        Row r = sheet.getRow(cr.getRow());
-        if (r == null) r = sheet.createRow(cr.getRow());
-        Cell c = r.getCell(cr.getCol());
-        if (c == null) c = r.createCell(cr.getCol());
-        return c;
-    }
 }
 '@
 
