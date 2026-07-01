@@ -1,451 +1,57 @@
-{
-  "GHC_SIT" : [ {
-    "queryType" : "H4_H5",
-    "results" : [ {
-      "timePeriod" : {
-        "end" : "2026-06-01",
-        "start" : "2026-05-01"
-      },
-      "estimated" : false,
-      "groups" : [ {
-        "keys" : [ "Enterprise Discount Program Discount" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
+$proj = "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost"
+
+Write-Host "Updating only GhcExcelProcessor..."
+Set-Content "$proj\excel\GhcExcelProcessor.java" @'
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("ghcExcelProcessor")
+public class GhcExcelProcessor extends BaseExcelProcessor {
+
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Write EM Suite cost to Z12 specifically for GHC
+        setNum("Z12",bd(val(m,"Product$EM")));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
         }
-      }, {
-        "keys" : [ "SavingsPlanCoveredUsage" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "2475.0915216067"
-          }
-        }
-      }, {
-        "keys" : [ "SavingsPlanNegation" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "Tax" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "16.98"
-          }
-        }
-      }, {
-        "keys" : [ "Usage" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "3725.8282729748"
-          }
-        }
-      } ]
-    } ]
-  }, {
-    "queryType" : "R12",
-    "results" : [ {
-      "timePeriod" : {
-        "end" : "2026-06-01",
-        "start" : "2026-05-01"
-      },
-      "estimated" : false,
-      "groups" : [ {
-        "keys" : [ "Product$" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "165.3733488848"
-          }
-        }
-      }, {
-        "keys" : [ "Product$COMMON" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "325.6044959177"
-          }
-        }
-      }, {
-        "keys" : [ "Product$DB-SERVER-1" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "775.3795850865"
-          }
-        }
-      }, {
-        "keys" : [ "Product$DB-SERVER-2" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "1749.7594558828"
-          }
-        }
-      }, {
-        "keys" : [ "Product$EDIFECS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "123.7161635825"
-          }
-        }
-      }, {
-        "keys" : [ "Product$EM" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "158.6435423668"
-          }
-        }
-      }, {
-        "keys" : [ "Product$FSX-VOL1" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "108.1384984343"
-          }
-        }
-      }, {
-        "keys" : [ "Product$IPLUS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "128.0706121433"
-          }
-        }
-      }, {
-        "keys" : [ "Product$IPLUS-API" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "40.6586245882"
-          }
-        }
-      }, {
-        "keys" : [ "Product$QLIK-COMPOSE" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "65.6421088595"
-          }
-        }
-      }, {
-        "keys" : [ "Product$QLIK-REPLICATE" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "62.1439041668"
-          }
-        }
-      }, {
-        "keys" : [ "Product$WPLUS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "39.6779330616"
-          }
-        }
-      } ]
-    } ]
-  }, {
-    "queryType" : "R14",
-    "results" : [ {
-      "timePeriod" : {
-        "end" : "2026-06-01",
-        "start" : "2026-05-01"
-      },
-      "estimated" : false,
-      "groups" : [ {
-        "keys" : [ "AWS CloudShell" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0000001322"
-          }
-        }
-      }, {
-        "keys" : [ "AWS CloudTrail" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Cost Explorer" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "1.0143"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Directory Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "10.7718118838"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Glue" ],  
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.00007406"
-          }
-        }
-      }, {
-        "keys" : [ "AWS HealthImaging" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0002737322"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Key Management Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "3.2585333636"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Lambda" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Secrets Manager" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.00089355"
-          }
-        }
-      }, {
-        "keys" : [ "AWS Step Functions" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0000181248"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon API Gateway" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0030969034"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon EC2 Container Registry (ECR)" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0540359493"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Elastic Compute Cloud - Compute" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Elastic Container Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon FSx" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "22.25970828"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Glacier" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0000000458"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon GuardDuty" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "46.5761897676"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Route 53" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0805"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Simple Email Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.007246378"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Simple Notification Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0000002255"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Simple Queue Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0001043739"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Simple Storage Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.1194375895"
-          }
-        }
-      }, {
-        "keys" : [ "Amazon Simple Workflow Service" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0.0000151303"
-          }
-        }
-      }, {
-        "keys" : [ "AmazonCloudWatch" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "64.2471093949"
-          }
-        }
-      }, {
-        "keys" : [ "Tax" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "16.98"
-          }
-        }
-      } ]
-    } ]
-  }, {
-    "queryType" : "R13",
-    "results" : [ {
-      "timePeriod" : {
-        "end" : "2026-06-01",
-        "start" : "2026-05-01"
-      },
-      "estimated" : false,
-      "groups" : [ {
-        "keys" : [ "Product$" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "0"
-          }
-        }
-      }, {
-        "keys" : [ "Product$DB-SERVER-1" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "439.0981980002"
-          }
-        }
-      }, {
-        "keys" : [ "Product$EDIFECS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "84.4836552"
-          }
-        }
-      }, {
-        "keys" : [ "Product$EM" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "968.9389401987"
-          }
-        }
-      }, {
-        "keys" : [ "Product$IPLUS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "437.1353701662"
-          }
-        }
-      }, {
-        "keys" : [ "Product$IPLUS-API" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "84.4836552"
-          }
-        }
-      }, {
-        "keys" : [ "Product$QLIK-COMPOSE" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "194.6849352"
-          }
-        }
-      }, {
-        "keys" : [ "Product$QLIK-REPLICATE" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "194.3963676416"
-          }
-        }
-      }, {
-        "keys" : [ "Product$WPLUS" ],
-        "metrics" : {
-          "NetAmortizedCost" : {
-            "unit" : "USD",
-            "amount" : "71.8704"
-          }
-        }
-      } ]
-    } ]
-  } ]
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        // Write EM Suite cost to Z13 specifically for GHC
+        setNum("Z13",bd(val(m,"Product$EM")));
+    }
 }
+'@
+Write-Host "GhcExcelProcessor successfully updated!"
