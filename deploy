@@ -374,7 +374,6 @@ import java.math.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import static com.healthproof.intplus.awscost.util.DateUtil.getRequiredDate;
 @Service
 public class AdvancedExcelProcessor {
     @Value("${excel.template.file.path}") private String templateFilePath;
@@ -394,7 +393,7 @@ public class AdvancedExcelProcessor {
             String env = environments.get(i); Model model = models.get(i);
             sheet = workbook.getSheet(companyName.toUpperCase()+"-"+env.toUpperCase());
             if (sheet == null) { System.out.println("Sheet not found: "+companyName.toUpperCase()+"-"+env.toUpperCase()); continue; }
-            initSheet(companyName, env);
+            initSheet(companyName, env, monthYearName);
             writeR12(model.getModelMapR12(), companyName, env);
             writeR14(model.getModelMapR14(), companyName, env);
             writeR13(model.getModelMapR13(), companyName, env);
@@ -411,9 +410,18 @@ public class AdvancedExcelProcessor {
         return base+v+ExcelMapper.FILE_EXTENSION;
     }
     private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
-    private void initSheet(String c,String e){
+    private void initSheet(String c,String e,String monthYearName){
         if(!check(c,e))return;
-        setStr("H3",getRequiredDate());setNum("H4",0);setNum("H5",0);setNum("H6",0);
+        String fullMonthName;
+        try {
+            java.time.format.DateTimeFormatter parser = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+            java.time.YearMonth ym = java.time.YearMonth.parse(monthYearName.toUpperCase(), parser);
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", java.util.Locale.ENGLISH);
+            fullMonthName = ym.format(formatter);
+        } catch (Exception ex) {
+            fullMonthName = monthYearName;
+        }
+        setStr("H3",fullMonthName);setNum("H4",0);setNum("H5",0);setNum("H6",0);
         for(int i=1;i<27;i++){sheet.getRow(11).getCell(i).setCellValue(0);sheet.getRow(12).getCell(i).setCellValue(0);sheet.getRow(13).getCell(i).setCellValue(0);}
     }
     public void writeH4H5(Map m,String c,String e){
@@ -754,6 +762,5 @@ Write-Host "  ALL 7 FILES DEPLOYED SUCCESSFULLY!  " -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
-Write-Host "1. Update C:\Users\143500\.aws\credentials - add company_name and environment to each profile" -ForegroundColor Yellow
-Write-Host "2. Rebuild Project in IntelliJ (Build -> Rebuild Project)" -ForegroundColor Yellow
-Write-Host "3. Restart the application" -ForegroundColor Yellow
+Write-Host "1. Rebuild Project in IntelliJ (Build -> Rebuild Project)" -ForegroundColor Yellow
+Write-Host "2. Restart the application" -ForegroundColor Yellow
