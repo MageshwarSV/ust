@@ -1,57 +1,887 @@
-$proj = "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost"
 
-Write-Host "Updating only GhcExcelProcessor..."
-Set-Content "$proj\excel\GhcExcelProcessor.java" @'
-package com.healthproof.intplus.awscost.excel;
-import com.healthproof.intplus.awscost.util.ExcelMapper;
-import org.springframework.stereotype.Component;
-import java.util.Map;
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
 
-@Component("ghcExcelProcessor")
-public class GhcExcelProcessor extends BaseExcelProcessor {
+ :: Spring Boot ::                (v3.5.4)
 
-    @Override
-    protected void writeR12(Map<String,String> m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
-        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
-        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
-        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
-        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
-        setNum("V12",bd(val(m,ExcelMapper.V12)));
-        
-        // Write EM Suite cost to Z12 specifically for GHC
-        setNum("Z12",bd(val(m,"Product$EM")));
-    }
-    
-    @Override
-    protected void writeR14(Map<String,String> m,String c,String e) {
-        if(!check(c,e))return;
-        setNum("W12",bd(val(m,ExcelMapper.W12)));
-        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
-        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
-        
-        double otherAwsServices = 0;
-        for (Map.Entry<String,String> entry : m.entrySet()) {
-            String serviceName = entry.getKey();
-            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
-                otherAwsServices += bd(entry.getValue());
-            }
-        }
-        setNum("X14", otherAwsServices);
-    }
-    
-    @Override
-    protected void writeR13(Map<String,String> m,String c,String e){
-        if(!check(c,e))return;
-        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
-        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
-        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
-        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
-        
-        // Write EM Suite cost to Z13 specifically for GHC
-        setNum("Z13",bd(val(m,"Product$EM")));
-    }
-}
-'@
-Write-Host "GhcExcelProcessor successfully updated!"
+2026-07-01T12:26:21.827+05:30  INFO 10184 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : Starting AwsCostApplication using Java 22.0.2 with PID 10184 (C:\Users\143500\Desktop\awscost\awscost\target\classes started by 143500 in C:\Users\143500\Desktop\awscost\awscost)
+2026-07-01T12:26:21.831+05:30  INFO 10184 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-07-01T12:26:22.996+05:30  INFO 10184 --- [Aws Cost] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-01T12:26:23.012+05:30  INFO 10184 --- [Aws Cost] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-01T12:26:23.012+05:30  INFO 10184 --- [Aws Cost] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.43]
+2026-07-01T12:26:23.111+05:30  INFO 10184 --- [Aws Cost] [           main] o.a.c.c.C.[.[localhost].[/awscost]       : Initializing Spring embedded WebApplicationContext
+2026-07-01T12:26:23.113+05:30  INFO 10184 --- [Aws Cost] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1217 ms
+2026-07-01T12:26:23.261+05:30  INFO 10184 --- [Aws Cost] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-07-01T12:26:23.558+05:30  INFO 10184 --- [Aws Cost] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/awscost'
+2026-07-01T12:26:23.581+05:30  INFO 10184 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : Started AwsCostApplication in 2.338 seconds (process running for 2.967)
+2026-07-01T12:26:30.172+05:30  INFO 10184 --- [Aws Cost] [nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/awscost]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-01T12:26:30.172+05:30  INFO 10184 --- [Aws Cost] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-01T12:26:30.177+05:30  INFO 10184 --- [Aws Cost] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2026-07-01T12:26:30.621+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-01T12:26:31.052+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:31.052+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:31.052+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:31.052+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:31.054+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:31.055+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:31.055+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:31.055+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:31.056+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:31.056+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:31.057+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:31.059+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:31.981+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:31.981+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:31.981+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:31.981+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:31.981+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:31.983+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:31.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:31.987+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:34.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:34.453+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:34.454+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:34.456+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:35.170+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:35.886+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:35.886+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:35.886+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:35.886+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:35.886+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:35.892+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+********----->: Profile=ZING-COMMON | Env=COMMON
+Model contents R12 :
+Product$: 914.693594638
+Product$COMMON: 604.1073380259
+Product$FSX: 69.7130001127
+Model contents R13 :
+Product$: 0
+Product$COMMON: 1244.2067016955
+Model contents H4 & H5:
+Usage: 1588.5139327766
+Bundled Discount: 0
+Enterprise Discount Program Discount: 0
+SavingsPlanCoveredUsage: 1244.2067016955
+SavingsPlanNegation: 0
+Tax: 0
+Model contents R14 :
+AWS Step Functions: 0.0000160972
+Amazon API Gateway: 4.8245320375
+Amazon Elastic File System: 16.801345726
+AWS Directory Service: 71.9415498448
+Amazon Simple Email Service: 2.3928677085
+AWS Glue: 0
+Amazon Simple Notification Service: 0.0107426595
+Tax: 0
+Amazon GuardDuty: 8.0610558346
+AWS Backup: 11.66909676
+Amazon Route 53: 150.1193950186
+Amazon FSx: 6.8094250705
+AmazonCloudWatch: 52.7992720794
+AWS Key Management Service: 4.019876225
+Amazon Simple Workflow Service: 0.0000146825
+AWS CloudShell: 0.0000000535
+AWS Lambda: 0.000014973
+Amazon Simple Storage Service: 25.8288291105
+Amazon Glacier: 0.0000000447
+AWS CloudTrail: 33.4513564
+Amazon Virtual Private Cloud: 296.4668167537
+EC2 - Other: 210.9202211577
+AWS WAF: 11.3146834932
+Common EC2 Services: 1466.0
+AWS HealthImaging: 0.0002656815
+Amazon EC2 Container Registry (ECR): 0.0228793392
+Amazon Elastic Compute Cloud - Compute: 1.2211314709
+AWS Secrets Manager: 4.842863912
+Amazon Simple Queue Service: 0.000042504
+AWS Cost Explorer: 1.1753
+2026-07-01T12:26:36.690+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-01T12:26:36.702+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:36.703+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:36.720+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:36.720+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:36.720+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:36.720+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:36.721+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:36.725+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:37.619+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:37.620+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:37.624+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:38.438+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:38.442+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:38.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:38.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:38.445+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:39.102+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:39.102+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:39.102+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:39.117+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:39.118+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:39.118+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:39.119+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+********----->: Profile=ZING-dev | Env=DEV
+Model contents R12 :
+Product$SPLUS: 0.0047290133
+Product$: 2410.7291869361
+Product$IPLUS: 21.7802082162
+Product$IPLUS-API: 0.007347059
+Product$QLIK-REPLICATE: 128.3755125595
+Product$FSX-VOL1: 147.6711901817
+Product$COMMON: 83.0328147703
+Product$QLIK-COMPOSE: 114.2204286242
+Product$EDIFECS: 0
+Product$DB-SERVER-1: 899.9988021404
+Product$DB-SERVER-2: 115.7880203607
+Model contents R13 :
+Product$: 0
+Product$IPLUS: 214.0655597178
+Product$IPLUS-API: 35.9303565726
+Product$QLIK-REPLICATE: 278.3740066953
+Product$QLIK-COMPOSE: 290.6113774053
+Product$EDIFECS: 219.4940539729
+Product$DB-SERVER-2: 288.7270280392
+Model contents H4 & H5:
+Usage: 3921.6082398614
+Bundled Discount: 0
+Enterprise Discount Program Discount: 0
+SavingsPlanCoveredUsage: 1327.2023824031
+SavingsPlanNegation: 0
+Tax: 0
+Model contents R14 :
+AWS Step Functions: 0.0000160925
+Amazon API Gateway: 0.0050363214
+AWS Directory Service: 10.7916464233
+AWS CloudFormation: 0
+AWS Glue: 0
+Amazon Simple Notification Service: 0.0000651654
+Tax: 0
+Amazon GuardDuty: 55.1444541163
+Amazon FSx: 28.6388428701
+AmazonCloudWatch: 54.6429912695
+AWS Key Management Service: 2.4085650888
+Amazon Simple Workflow Service: 0.0000146825
+AWS CloudShell: 0.0000002108
+Amazon Elastic Container Service: 0
+AWS Lambda: 0
+Amazon Simple Storage Service: 3.826546882
+Amazon CloudFront: 0.0056715434
+Amazon Glacier: 0.0000000447
+Amazon Elastic Load Balancing: 3.6044064904
+AWS CloudTrail: 283.8915254
+Amazon Virtual Private Cloud: 35.9352
+EC2 - Other: 1857.2285869803
+AWS WAF: 45.8442290322
+Common EC2 Services: 2439.1200000000003
+AWS HealthImaging: 0.0002656815
+Amazon EC2 Container Registry (ECR): 16.9652934208
+Amazon Elastic Compute Cloud - Compute: 0.0543202404
+AWS Secrets Manager: 5.3380632488
+Amazon Simple Queue Service: 5.228145731
+AWS Cost Explorer: 1.1753
+2026-07-01T12:26:39.970+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-01T12:26:39.979+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:39.980+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:39.982+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:39.984+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:39.984+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:39.984+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:39.984+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:39.985+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:39.993+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:39.995+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:40.895+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:40.897+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:41.715+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:41.717+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:41.717+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:41.718+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:41.718+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:41.718+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:41.719+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:41.719+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:42.501+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:42.509+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+********----->: Profile=ZING-prod | Env=PROD
+Model contents R12 :
+Product$SPLUS: 0.000009982
+Product$: 3129.4056677992
+Product$IPLUS: 94.6092491176
+Product$IPLUS-API: 41.9447364385
+Product$QLIK-REPLICATE: 2189.5196815045
+Product$COMMON: 1469.9380396999
+Product$QLIK-COMPOSE: 241.3072290133
+Product$EDIFECS: 202.1003341871
+Product$FSX: 670.3802463122
+Product$RDS-SERVER-1: 3248.5123392469
+Product$RDS-SERVER-2: 2290.4180376204
+Product$WPLUS: 39.9856110385
+Model contents R13 :
+Product$: 0
+Product$IPLUS: 430.2373485802
+Product$IPLUS-API: 84.4626636234
+Product$QLIK-REPLICATE: 389.3698704
+Product$QLIK-COMPOSE: 389.3698704
+Product$EDIFECS: 218.5864694882
+Product$WPLUS: 71.8603509435
+Model contents H4 & H5:
+Usage: 13618.1211819601
+Bundled Discount: 0
+Enterprise Discount Program Discount: 0
+SavingsPlanCoveredUsage: 1583.8865734353
+SavingsPlanNegation: 0
+Tax: 0
+Model contents R14 :
+AWS Step Functions: 0.000059475
+Amazon API Gateway: 2.0451084228
+Amazon Simple Email Service: 0.0040257441
+AWS Glue: 0
+Amazon Simple Notification Service: 0.0022662469
+Tax: 0
+Amazon GuardDuty: 72.8895082064
+Amazon FSx: 222.7376349062
+AmazonCloudWatch: 900.5287609925
+AWS Key Management Service: 8.387473125
+Amazon Simple Workflow Service: 0.0000385719
+AWS CloudShell: 0.0000002695
+AWS Service Catalog: 0
+Amazon Elastic Container Service: 0
+AWS Lambda: 0.0298080397
+Amazon Simple Storage Service: 98.7631206645
+Amazon CloudFront: 0.4718629662
+Amazon Glacier: 0.0000028073
+Amazon Elastic Load Balancing: 27.0664589019
+AWS CloudTrail: 429.5584811
+Amazon Virtual Private Cloud: 46.5833676876
+AWS Systems Manager: 0.049084875
+EC2 - Other: 134.7828931872
+Amazon Relational Database Service: 1104.7557569158
+AWS WAF: 34.9370735244
+Common EC2 Services: 3698.82
+AWS HealthImaging: 0.0002656815
+Amazon EC2 Container Registry (ECR): 11.2612188379
+Amazon Elastic Compute Cloud - Compute: 0.0867011967
+AWS Secrets Manager: 15.7400724626
+Amazon Simple Queue Service: 17.2434229906
+AWS Cost Explorer: 1.4812
+2026-07-01T12:26:43.247+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:43.253+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:43.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:43.269+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:44.162+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:44.167+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:45.084+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:45.084+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:45.084+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:45.084+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:45.084+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:45.094+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:46.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:46.033+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+********----->: Profile=ZING-preprod | Env=PREPROD
+Model contents R12 :
+Product$: 274.8514030296
+Product$COMMON: 18.868953133
+Model contents R13 :
+Product$: 0
+Model contents H4 & H5:
+Usage: 293.7203561626
+Enterprise Discount Program Discount: 0
+Tax: 0
+Model contents R14 :
+AWS Step Functions: 0.0000160911
+AWS CloudFormation: 0
+AWS Glue: 0
+Amazon Simple Notification Service: 0.0000649366
+Tax: 0
+Amazon GuardDuty: 2.187120278
+Amazon FSx: 2.9718963626
+AmazonCloudWatch: 1.7886999363
+AWS Key Management Service: 2.4200589042
+Amazon Simple Workflow Service: 0.0000146825
+Amazon Elastic Container Service: 0
+Amazon Simple Storage Service: 2.8006876089
+Amazon CloudFront: 0.0027436404
+Amazon Glacier: 0.0000000447
+Amazon Elastic Load Balancing: 13.4832760869
+AWS CloudTrail: 12.2997721
+Amazon Virtual Private Cloud: 35.9352
+EC2 - Other: 145.9074617298
+AWS WAF: 43.471430221
+Common EC2 Services: 291.93
+AWS HealthImaging: 0.0002656815
+Amazon EC2 Container Registry (ECR): 6.5230623772
+Amazon Elastic Compute Cloud - Compute: 0.0000207109
+AWS Secrets Manager: 3.8743764596
+Amazon Simple Queue Service: 0.0099351774
+AWS Cost Explorer: 1.1753
+2026-07-01T12:26:46.829+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-01T12:26:46.834+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:46.837+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:46.837+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:46.837+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:46.839+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:46.839+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:46.839+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:46.839+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:46.841+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:46.841+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:46.841+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:46.841+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:46.842+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:46.852+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:46.854+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:48.265+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:48.266+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:48.267+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:48.281+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:48.281+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:48.282+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-01T12:26:49.032+05:30  WARN 10184 --- [Aws Cost] [nio-8080-exec-1] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-01T12:26:49.981+05:30 ERROR 10184 --- [Aws Cost] [nio-8080-exec-1] o.a.c.c.C.[.[.[.[dispatcherServlet]      : Servlet.service() for servlet [dispatcherServlet] in context with path [/awscost] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "String.toString()" because the return value of "java.util.Map.get(Object)" is null] with root cause
+
+java.lang.NullPointerException: Cannot invoke "String.toString()" because the return value of "java.util.Map.get(Object)" is null
+	at com.healthproof.intplus.awscost.awsDev.CostExplorerDev.calculateCommonService(CostExplorerDev.java:96) ~[classes/:na]
+	at com.healthproof.intplus.awscost.awsDev.CostExplorerDev.start(CostExplorerDev.java:34) ~[classes/:na]
+	at com.healthproof.intplus.awscost.contorller.CostContorller.generate(CostContorller.java:45) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.43.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
+
