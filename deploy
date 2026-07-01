@@ -1,3 +1,4 @@
+Set-Content "C:\Users\143500\Desktop\awscost\deploy.ps1" @'
 $proj = "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost"
 $static = "C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static"
 
@@ -764,3 +765,4 @@ Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "1. Rebuild Project in IntelliJ (Build -> Rebuild Project)" -ForegroundColor Yellow
 Write-Host "2. Restart the application" -ForegroundColor Yellow
+'@
