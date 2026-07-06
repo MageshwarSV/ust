@@ -1,1 +1,132 @@
-failed: Profile file contained no credentials for profile 'PHC SIT': ProfileFile(profilesAndSectionsMap=[{MEDSTAR-prod=Profile(name=MEDSTAR-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), MEDSTAR-DEV=Profile(name=MEDSTAR-DEV, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-cs=Profile(name=AmeriBen-cs, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-dev=Profile(name=AmeriBen-dev, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-preprod=Profile(name=AmeriBen-preprod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-prod=Profile(name=AmeriBen-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-sit=Profile(name=AmeriBen-sit, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), AmeriBen-uat=Profile(name=AmeriBen-uat, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-cs=Profile(name=IBX-cs, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-dev=Profile(name=IBX-dev, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-preprod=Profile(name=IBX-preprod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-prod=Profile(name=IBX-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-sit=Profile(name=IBX-sit, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IBX-uat=Profile(name=IBX-uat, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), BCBSKS-COMMON=Profile(name=BCBSKS-COMMON, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), BCBSKS-dev=Profile(name=BCBSKS-dev, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), BCBSKS-prod=Profile(name=BCBSKS-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), BCBSKS-sit=Profile(name=BCBSKS-sit, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), BCBSKS-uat=Profile(name=BCBSKS-uat, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), CLOVERHEALTH=Profile(name=CLOVERHEALTH, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IUHP-cs=Profile(name=IUHP-cs, properties=[environment, aws_access_key_id, aws_secret_access_key, company_name]), IUHP-prod=Profile(name=IUHP-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), IUHP-DEV=Profile(name=IUHP-DEV, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), Quality-COMMON=Profile(name=Quality-COMMON, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), Quality-prod=Profile(name=Quality-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), Quality-sit=Profile(name=Quality-sit, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-COMMON=Profile(name=ZING-COMMON, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-dev=Profile(name=ZING-dev, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-prod=Profile(name=ZING-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-preprod=Profile(name=ZING-preprod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-sit=Profile(name=ZING-sit, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ZING-uat=Profile(name=ZING-uat, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), GHC_SIT=Profile(name=GHC_SIT, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ghc-common=Profile(name=ghc-common, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ghc-dev=Profile(name=ghc-dev, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ghc-preprod=Profile(name=ghc-preprod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ghc-prod=Profile(name=ghc-prod, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name]), ghc-uat=Profile(name=ghc-uat, properties=[environment, aws_access_key_id, region, aws_secret_access_key, company_name])}, {}])
+Set-Content "$proj\excel\BaseExcelProcessor.java" @'
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import java.io.*;
+import java.math.*;
+import java.nio.file.*;
+import java.util.*;
+
+public abstract class BaseExcelProcessor {
+    @Value("${excel.template.file.path}") protected String templateFilePath;
+    @Value("${excel.template.file.name}") protected String templateFileName;
+    @Value("${excel.input.file.path}") protected String inputFilePath;
+    @Value("${excel.input.file.name}") protected String inputFileName;
+    @Value("${excel.output.file.path}") protected String outFilePath;
+    protected Workbook workbook; protected Sheet sheet; protected String fileName;
+    
+    public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
+        String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
+        File outputDir = new File(outFilePath);
+        if (!outputDir.exists()) outputDir.mkdirs();
+        File[] existing = outputDir.listFiles((d, n) -> n.startsWith(basePattern) && n.endsWith(ExcelMapper.FILE_EXTENSION));
+        int version = 1;
+        if (existing != null) {
+            for (File f : existing) {
+                try {
+                    int x = Integer.parseInt(f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length()));
+                    if (x >= version) version = x + 1;
+                } catch (Exception ignored) {}
+            }
+        }
+        this.fileName = basePattern + version + ExcelMapper.FILE_EXTENSION;
+        
+        String tplPath = templateFilePath + File.separator + companyName.toLowerCase() + "_template.xlsx";
+        File tplFile = new File(tplPath);
+        if (!tplFile.exists()) tplPath = templateFilePath + File.separator + templateFileName + ExcelMapper.FILE_EXTENSION;
+        try (FileInputStream fis = new FileInputStream(tplPath)) { this.workbook = new XSSFWorkbook(fis); }
+
+        for (int i = 0; i < environments.size(); i++) {
+            String env = environments.get(i); Model model = models.get(i);
+            String sheetName = companyName + "-" + env;
+            sheet = workbook.getSheet(sheetName);
+            if (sheet == null) {
+                for(int s=0; s<workbook.getNumberOfSheets(); s++){
+                    if(workbook.getSheetName(s).equalsIgnoreCase(sheetName)){ sheet = workbook.getSheetAt(s); break; }
+                }
+            }
+            if (sheet == null) { System.out.println("Sheet not found: "+sheetName); continue; }
+            
+            initSheet(companyName, env, monthYearName);
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
+            writeR12(model.getModelMapR12(), companyName, env);
+            writeR14(model.getModelMapR14(), companyName, env);
+            writeR13(model.getModelMapR13(), companyName, env);
+            writeESPCost();
+        }
+        writeExcel(); copyFileToInputDirectory();
+    }
+    
+    protected boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    
+    protected void initSheet(String c, String e, String monthYearName) {
+        if(!check(c,e))return;
+        
+        String displayDate = monthYearName.substring(0,3) + " 20" + monthYearName.substring(3);
+        displayDate = displayDate.substring(0,1).toUpperCase() + displayDate.substring(1).toLowerCase();
+        
+        setStr("H3", displayDate); setNum("H4",0);setNum("H5",0);setNum("H6",0);
+        for(int i=1;i<27;i++){
+            if(sheet.getRow(11)!=null && sheet.getRow(11).getCell(i)!=null) sheet.getRow(11).getCell(i).setCellValue(0);
+            if(sheet.getRow(12)!=null && sheet.getRow(12).getCell(i)!=null) sheet.getRow(12).getCell(i).setCellValue(0);
+            if(sheet.getRow(13)!=null && sheet.getRow(13).getCell(i)!=null) sheet.getRow(13).getCell(i).setCellValue(0);
+        }
+    }
+    
+    protected void writeH4H5(Map m,String c,String e){
+        if(!check(c,e))return;
+        double tax = bd(val(m,"Tax"));
+        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
+        setNum("H5", bd(val(m,ExcelMapper.H5)));
+    }
+    
+    protected abstract void writeR12(Map<String,String> m,String c,String e);
+    protected abstract void writeR14(Map<String,String> m,String c,String e);
+    protected abstract void writeR13(Map<String,String> m,String c,String e);
+    
+    protected void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
+    protected double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
+    
+    protected String val(Map<String,String> m,String k){
+        if(m.get(k)!=null) return m.get(k).toString();
+        String fallbackNoHyphen = k.replaceAll("-(\\d+)$", "$1"); 
+        if(m.get(fallbackNoHyphen)!=null) return m.get(fallbackNoHyphen).toString();
+        String fallbackWithHyphen = k.replaceAll("(?<!-)(\\d+)$", "-$1");
+        if(m.get(fallbackWithHyphen)!=null) return m.get(fallbackWithHyphen).toString();
+        return "0";
+    }
+    
+    protected void setNum(String ref, double val) {
+        Cell c = getCell(ref); if (c != null) { c.setCellValue(val); }
+    }
+    protected void setStr(String ref, String val) {
+        Cell c = getCell(ref); if (c != null) c.setCellValue(val);
+    }
+    protected Cell getCell(String ref) {
+        CellReference cr = new CellReference(ref);
+        Row r = sheet.getRow(cr.getRow());
+        if (r == null) r = sheet.createRow(cr.getRow());
+        Cell c = r.getCell(cr.getCol());
+        if (c == null) c = r.createCell(cr.getCol());
+        return c;
+    }
+    
+    protected void writeExcel() throws IOException {
+        workbook.setForceFormulaRecalculation(true);
+        try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { 
+            workbook.write(fos); workbook.close(); 
+        }
+    }
+    
+    protected void copyFileToInputDirectory() throws IOException {
+        Path dest = Paths.get(inputFilePath + File.separator + inputFileName + ExcelMapper.FILE_EXTENSION);
+        if (Files.notExists(dest)) Files.createFile(dest);
+        Files.copy(Paths.get(outFilePath + File.separator + fileName), dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+    public String getFileName() { return fileName; }
+}
+'@
