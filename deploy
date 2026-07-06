@@ -1,3 +1,165 @@
 
-WYOBLUE
-failed: User: arn:aws:iam::424056758796:user/usthp_emgt_ci_user is not authorized to perform: ce:GetCostAndUsage on resource: arn:aws:ce:us-east-1:424056758796:/GetCostAndUsage because no identity-based policy allows the ce:GetCostAndUsage action (Service: CostExplorer, Status Code: 400, Request ID: 4fc298f3-dfe5-4958-ab2b-d100d13c392b)
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.4)
+
+2026-07-06T14:12:52.396+05:30  INFO 23224 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : Starting AwsCostApplication using Java 22.0.2 with PID 23224 (C:\Users\143500\Desktop\awscost\awscost\target\classes started by 143500 in C:\Users\143500\Desktop\awscost\awscost)
+2026-07-06T14:12:52.401+05:30  INFO 23224 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-07-06T14:12:53.447+05:30  INFO 23224 --- [Aws Cost] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-06T14:12:53.447+05:30  INFO 23224 --- [Aws Cost] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-06T14:12:53.463+05:30  INFO 23224 --- [Aws Cost] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.43]
+2026-07-06T14:12:53.526+05:30  INFO 23224 --- [Aws Cost] [           main] o.a.c.c.C.[.[localhost].[/awscost]       : Initializing Spring embedded WebApplicationContext
+2026-07-06T14:12:53.526+05:30  INFO 23224 --- [Aws Cost] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1055 ms
+2026-07-06T14:12:53.685+05:30  INFO 23224 --- [Aws Cost] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-07-06T14:12:53.987+05:30  INFO 23224 --- [Aws Cost] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/awscost'
+2026-07-06T14:12:53.995+05:30  INFO 23224 --- [Aws Cost] [           main] c.h.intplus.awscost.AwsCostApplication   : Started AwsCostApplication in 2.191 seconds (process running for 2.813)
+2026-07-06T14:13:15.333+05:30  INFO 23224 --- [Aws Cost] [nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/awscost]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-06T14:13:15.333+05:30  INFO 23224 --- [Aws Cost] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-06T14:13:15.337+05:30  INFO 23224 --- [Aws Cost] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-07-06T14:13:20.022+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.awssdk.http.apache.ApacheHttpClient  : SSL Certificate verification is disabled. This is not a safe setting and should only be used for testing.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-06T14:13:20.271+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 147. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 148. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 149. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 150. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 151. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 154. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 155. The later one in the file will be used.
+2026-07-06T14:13:20.832+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 156. The later one in the file will be used.
+2026-07-06T14:13:20.834+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 157. The later one in the file will be used.
+2026-07-06T14:13:20.834+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 158. The later one in the file will be used.
+2026-07-06T14:13:20.834+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 161. The later one in the file will be used.
+2026-07-06T14:13:20.834+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 162. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 163. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 164. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 165. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 168. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 169. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 170. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 171. The later one in the file will be used.
+2026-07-06T14:13:20.835+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 172. The later one in the file will be used.
+2026-07-06T14:13:20.837+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_access_key_id' detected on line 175. The later one in the file will be used.
+2026-07-06T14:13:20.837+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'aws_secret_access_key' detected on line 176. The later one in the file will be used.
+2026-07-06T14:13:20.837+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'region' detected on line 177. The later one in the file will be used.
+2026-07-06T14:13:20.839+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'company_name' detected on line 178. The later one in the file will be used.
+2026-07-06T14:13:20.839+05:30  WARN 23224 --- [Aws Cost] [nio-8080-exec-3] s.a.a.p.internal.ProfileFileReader       : Warning: Duplicate property 'environment' detected on line 179. The later one in the file will be used.
+2026-07-06T14:13:22.552+05:30 ERROR 23224 --- [Aws Cost] [nio-8080-exec-3] o.a.c.c.C.[.[.[.[dispatcherServlet]      : Servlet.service() for servlet [dispatcherServlet] in context with path [/awscost] threw exception [Request processing failed: software.amazon.awssdk.services.costexplorer.model.CostExplorerException: User: arn:aws:iam::424056758796:user/usthp_emgt_ci_user is not authorized to perform: ce:GetCostAndUsage on resource: arn:aws:ce:us-east-1:424056758796:/GetCostAndUsage because no identity-based policy allows the ce:GetCostAndUsage action (Service: CostExplorer, Status Code: 400, Request ID: 4fc298f3-dfe5-4958-ab2b-d100d13c392b)] with root cause
+
+software.amazon.awssdk.services.costexplorer.model.CostExplorerException: User: arn:aws:iam::424056758796:user/usthp_emgt_ci_user is not authorized to perform: ce:GetCostAndUsage on resource: arn:aws:ce:us-east-1:424056758796:/GetCostAndUsage because no identity-based policy allows the ce:GetCostAndUsage action (Service: CostExplorer, Status Code: 400, Request ID: 4fc298f3-dfe5-4958-ab2b-d100d13c392b)
+	at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleErrorResponse(CombinedResponseHandler.java:125) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleResponse(CombinedResponseHandler.java:82) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handle(CombinedResponseHandler.java:60) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handle(CombinedResponseHandler.java:41) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.HandleResponseStage.execute(HandleResponseStage.java:40) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.HandleResponseStage.execute(HandleResponseStage.java:30) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptTimeoutTrackingStage.execute(ApiCallAttemptTimeoutTrackingStage.java:73) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptTimeoutTrackingStage.execute(ApiCallAttemptTimeoutTrackingStage.java:42) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.TimeoutExceptionHandlingStage.execute(TimeoutExceptionHandlingStage.java:78) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.TimeoutExceptionHandlingStage.execute(TimeoutExceptionHandlingStage.java:40) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptMetricCollectionStage.execute(ApiCallAttemptMetricCollectionStage.java:50) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallAttemptMetricCollectionStage.execute(ApiCallAttemptMetricCollectionStage.java:36) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.RetryableStage.execute(RetryableStage.java:81) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.RetryableStage.execute(RetryableStage.java:36) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.StreamManagingStage.execute(StreamManagingStage.java:56) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.StreamManagingStage.execute(StreamManagingStage.java:36) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.executeWithTimer(ApiCallTimeoutTrackingStage.java:80) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.execute(ApiCallTimeoutTrackingStage.java:60) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallTimeoutTrackingStage.execute(ApiCallTimeoutTrackingStage.java:42) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallMetricCollectionStage.execute(ApiCallMetricCollectionStage.java:48) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ApiCallMetricCollectionStage.execute(ApiCallMetricCollectionStage.java:31) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.RequestPipelineBuilder$ComposingRequestPipelineStage.execute(RequestPipelineBuilder.java:206) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ExecutionFailureExceptionReportingStage.execute(ExecutionFailureExceptionReportingStage.java:37) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.pipeline.stages.ExecutionFailureExceptionReportingStage.execute(ExecutionFailureExceptionReportingStage.java:26) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.http.AmazonSyncHttpClient$RequestExecutionBuilderImpl.execute(AmazonSyncHttpClient.java:193) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.invoke(BaseSyncClientHandler.java:103) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.doExecute(BaseSyncClientHandler.java:171) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.lambda$execute$1(BaseSyncClientHandler.java:82) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.measureApiCallSuccess(BaseSyncClientHandler.java:179) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.internal.handler.BaseSyncClientHandler.execute(BaseSyncClientHandler.java:76) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.core.client.handler.SdkSyncClientHandler.execute(SdkSyncClientHandler.java:45) ~[sdk-core-2.20.63.jar:na]
+	at software.amazon.awssdk.awscore.client.handler.AwsSyncClientHandler.execute(AwsSyncClientHandler.java:56) ~[aws-core-2.20.63.jar:na]
+	at software.amazon.awssdk.services.costexplorer.DefaultCostExplorerClient.getCostAndUsage(DefaultCostExplorerClient.java:798) ~[costexplorer-2.20.63.jar:na]
+	at com.healthproof.intplus.awscost.awsDev.CostExplorerDev.getH4andH5(CostExplorerDev.java:52) ~[classes/:na]
+	at com.healthproof.intplus.awscost.awsDev.CostExplorerDev.start(CostExplorerDev.java:34) ~[classes/:na]
+	at com.healthproof.intplus.awscost.contorller.CostContorller.generate(CostContorller.java:44) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.43.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar:10.1.43]
+	at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
+
