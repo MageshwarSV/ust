@@ -1,19 +1,97 @@
-Set-Content "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java" @'
-package com.healthproof.intplus.awscost.excel;
+Set-Content "C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java" @'
+package com.healthproof.intplus.awscost.contorller;
+import com.healthproof.intplus.awscost.*;
+import com.healthproof.intplus.awscost.awsDev.CostExplorerDev;
+import com.healthproof.intplus.awscost.excel.BaseExcelProcessor;
+import com.healthproof.intplus.awscost.excel.ExcelProcessorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-@Service
-public class ExcelProcessorFactory {
-    @Autowired
-    private ApplicationContext context;
-    public BaseExcelProcessor getProcessor(String companyName) {
-        String beanName = companyName.toLowerCase() + "ExcelProcessor";
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import java.io.*;
+import java.util.*;
+import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentTimeStamp;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_FILE_NAME;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_PATH;
+@RestController
+public class CostContorller {
+    @Autowired private ExcelProcessorFactory processorFactory;
+    @Autowired private CostExplorerDev costExplorerDev;
+    @Autowired private CredentialsReader credentialsReader;
+    @Value("${excel.output.file.path}") private String outFilePath;
+    
+    @GetMapping("/api/profiles")
+    public List<CompanyProfile> getProfiles() throws IOException { return credentialsReader.readProfiles(); }
+    
+    @PostMapping("/api/generate")
+    public Map<String, Serializable> generate(@RequestBody CostRequest request) throws Exception {
+        List<Model> models = new ArrayList<>();
+        Map<String, List<Map<String, Object>>> allRawData = new LinkedHashMap<>();
+        String ymStr = request.getYearMonth();
+        java.time.YearMonth ym;
+        if (ymStr == null || ymStr.trim().isEmpty() || ymStr.equalsIgnoreCase("DEFAULT")) {
+            ym = java.time.YearMonth.now().minusMonths(1);
+        } else {
+            ym = java.time.YearMonth.parse(ymStr.trim());
+        }
+        String startDate = ym.atDay(1).toString();
+        String endDate = ym.plusMonths(1).atDay(1).toString();
+        java.time.format.DateTimeFormatter formatMonthYear = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+        String monthYearName = ym.format(formatMonthYear).toUpperCase();
+        
+        for (int i = 0; i < request.getProfiles().size(); i++) {
+            String profile = request.getProfiles().get(i);
+            String env = request.getEnvironments().get(i);
+            costExplorerDev.start(profile, env, startDate, endDate);
+            models.add(costExplorerDev.getModel());
+            allRawData.put(profile, costExplorerDev.getRawQueriesData());
+        }
+        
+        BaseExcelProcessor excelProcessor = processorFactory.getProcessor(request.getCompanyName());
+        excelProcessor.start(request.getCompanyName(), request.getEnvironments(), models, monthYearName);
+        
+        saveRawDataJson(excelProcessor.getFileName(), allRawData);
+        return Map.of("id","1","message","Report generated!","code",200,
+                "timeStamp",getCurrentTimeStamp(),"fileName",excelProcessor.getFileName(),"status","success");
+    }
+    
+    private void saveRawDataJson(String excelFileName, Object data) {
         try {
-            return (BaseExcelProcessor) context.getBean(beanName);
+            if (excelFileName == null || !excelFileName.contains(".")) return;
+            String jsonFileName = excelFileName.substring(0, excelFileName.lastIndexOf(".")) + ".json";
+            File jsonFile = new File(outFilePath + File.separator + jsonFileName);
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
+            System.out.println("Consolidated Raw AWS data saved to: " + jsonFile.getAbsolutePath());
         } catch (Exception e) {
-            System.out.println("No specific processor found for " + companyName + ". Using default.");
-            return (BaseExcelProcessor) context.getBean("defaultExcelProcessor");
+            System.err.println("Failed to save raw AWS data JSON: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @GetMapping("/downloads/{filename}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
+        File file = new File(outFilePath + File.separator + filename);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(bos.toByteArray());
+        }
+    }
+    
+    @PostMapping("/downloads")
+    public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
+        File file = new File(OUTPUT_PATH + OUTPUT_FILE_NAME);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"report.xlsx\"")
+                    .body(bos.toByteArray());
         }
     }
 }
