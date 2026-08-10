@@ -1,13 +1,62 @@
-$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java"
+# 1. Restore all Java files from export.txt backup
+$exportPath = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\export.txt"
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
-Get-ChildItem -Path $baseDir -Recurse -Filter "*.java" | ForEach-Object {
-    $bytes = [System.IO.File]::ReadAllBytes($_.FullName)
-    # Check for UTF-8 BOM header bytes (0xEF, 0xBB, 0xBF)
-    if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
-        $cleanBytes = $bytes[3..($bytes.Length - 1)]
-        [System.IO.File]::WriteAllBytes($_.FullName, $cleanBytes)
-        Write-Host "Removed BOM from: $($_.Name)" -ForegroundColor Yellow
+if (Test-Path $exportPath) {
+    $rawText = [System.IO.File]::ReadAllText($exportPath)
+    $sections = $rawText -split "=== FILE: "
+
+    foreach ($sec in $sections) {
+        if ($sec.Trim().Length -eq 0 -or -not ($sec -like "*src\main\java*")) { continue }
+        $lines = $sec -split "`r`n|`n"
+        $filePath = $lines[0].Trim()
+        $fileContent = ($lines[1..($lines.Length - 1)]) -join "`r`n"
+        
+        $dir = [System.IO.Path]::GetDirectoryName($filePath)
+        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        [System.IO.File]::WriteAllText($filePath, $fileContent, $utf8NoBom)
+    }
+    Write-Host "1. All Java files successfully restored from export.txt!" -ForegroundColor Green
+} else {
+    Write-Host "export.txt not found at $exportPath" -ForegroundColor Red
+}
+
+# 2. Update W12 formula in CostExplorerDev.java
+$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
+$cePath = "$baseDir\awsDev\CostExplorerDev.java"
+
+if (Test-Path $cePath) {
+    $ceContent = [System.IO.File]::ReadAllText($cePath)
+    $oldLine = 'double ec2 = total - new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue() + common;'
+    $newLine = @"
+Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service");
+        double rds = new BigDecimal(rdsObj != null ? rdsObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double cloudwatch = new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double ec2 = total - cloudwatch - rds + common;
+"@
+    if ($ceContent.Contains($oldLine)) {
+        $ceContent = $ceContent.Replace($oldLine, $newLine)
+        [System.IO.File]::WriteAllText($cePath, $ceContent, $utf8NoBom)
+        Write-Host "2. CostExplorerDev.java updated with SOP W12 formula!" -ForegroundColor Green
     }
 }
 
-Write-Host "All project .java files cleaned successfully! You can build now." -ForegroundColor Green
+# 3. Update Z12 & Z13 in Excel processors
+Get-ChildItem "$baseDir\excel\*ExcelProcessor.java" | ForEach-Object {
+    $code = [System.IO.File]::ReadAllText($_.FullName)
+    $v12Old = 'setNum("V12",bd(val(m,ExcelMapper.V12)));'
+    $v12New = 'setNum("V12",bd(val(m,ExcelMapper.V12))); setNum("Z12",bd(val(m,"Product$EM")));'
+    $y13Old = 'setNum("Y13",bd(val(m,ExcelMapper.Y13)));'
+    $y13New = 'setNum("Y13",bd(val(m,ExcelMapper.Y13))); setNum("Z13",bd(val(m,"Product$EM")));'
+    
+    if (-not $code.Contains("Z12") -and $code.Contains($v12Old)) {
+        $code = $code.Replace($v12Old, $v12New)
+    }
+    if (-not $code.Contains("Z13") -and $code.Contains($y13Old)) {
+        $code = $code.Replace($y13Old, $y13New)
+    }
+    [System.IO.File]::WriteAllText($_.FullName, $code, $utf8NoBom)
+}
+
+Write-Host "3. All Excel Processors updated with Z12 & Z13!" -ForegroundColor Green
+Write-Host "`nRESTORATION COMPLETE! CLICK BUILD IN INTELLIJ NOW!" -ForegroundColor Yellow
