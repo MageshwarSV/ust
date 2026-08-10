@@ -1,39 +1,223 @@
-$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
-
-# 1. Update CostExplorerDev.java (Formula: Total - CloudWatch - RDS + Common)
-$costExplorerPath = "$baseDir\awsDev\CostExplorerDev.java"
-$ceContent = Get-Content $costExplorerPath -Raw
-$oldCalc = 'private void calculateCommonService\(\) \{[\s\S]*?model\.getModelMapR14\(\)\.put\(ExcelMapper\.W12, String\.valueOf\(ec2\)\);[\s\S]*?\}'
-$newCalc = @"
-private void calculateCommonService() {
-        Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);
-        Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);
-        Object y12Obj = model.getModelMapR14().get(ExcelMapper.Y12);
-        Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service");
-
-        double common = new BigDecimal(commonObj != null ? commonObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double total = new BigDecimal(totalObj != null ? totalObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double cloudwatch = new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double rds = new BigDecimal(rdsObj != null ? rdsObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-        double ec2 = total - cloudwatch - rds + common;
-        model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));
-    }
-"@
-$ceContent = [regex]::Replace($ceContent, $oldCalc, $newCalc)
-Set-Content -Path $costExplorerPath -Value $ceContent -Encoding utf8
-
-# 2. Update Excel Processors to write Z12 and Z13 for EM Suite across all company processors
-$processors = Get-ChildItem "$baseDir\excel\*ExcelProcessor.java"
-foreach ($p in $processors) {
-    $code = Get-Content $p.FullName -Raw
-    if ($code -match 'writeR12' -and $code -notmatch 'Z12') {
-        $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z12",bd(val(m,"Product$EM")));'
-    }
-    if ($code -match 'writeR13' -and $code -notmatch 'Z13') {
-        $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z13",bd(val(m,"Product$EM")));'
-    }
-    Set-Content -Path $p.FullName -Value $code -Encoding utf8
-}
-
-Write-Host "All SOP updates successfully applied to project!" -ForegroundColor Green
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"                                                                                                                
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> 
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> # 1. Update CostExplorerDev.java (Formula: Total - CloudWatch - RDS + Common)
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $costExplorerPath = "$baseDir\awsDev\CostExplorerDev.java"
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $ceContent = Get-Content $costExplorerPath -Raw
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $oldCalc = 'private void calculateCommonService\(\) \{[\s\S]*?model\.getModelMapR14\(\)\.put\(ExcelMapper\.W12, String\.valueOf\(ec2\)\);[\s\S]*?\}'                                                                              
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $newCalc = @"
+>> private void calculateCommonService() {                                                                                                     
+>>         Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);                                                                  
+>>         Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);                                                           
+>>         Object y12Obj = model.getModelMapR14().get(ExcelMapper.Y12);                                                                        
+>>         Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service");                                                   
+>>                                                                                                                                             
+>>         double common = new BigDecimal(commonObj != null ? commonObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();     
+>>         double total = new BigDecimal(totalObj != null ? totalObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();        
+>>         double cloudwatch = new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();       
+>>         double rds = new BigDecimal(rdsObj != null ? rdsObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();              
+>>                                                                                                                                             
+>>         double ec2 = total - cloudwatch - rds + common;                                                                                     
+>>         model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));                                                                   
+>>     }                                                                                                                                       
+>> "@                                                                                                                                          
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $ceContent = [regex]::Replace($ceContent, $oldCalc, $newCalc)
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Set-Content -Path $costExplorerPath -Value $ceContent -Encoding utf8
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> 
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> # 2. Update Excel Processors to write Z12 and Z13 for EM Suite across all company processors                                                                                                                                      
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> $processors = Get-ChildItem "$baseDir\excel\*ExcelProcessor.java"
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> foreach ($p in $processors) {
+>>     $code = Get-Content $p.FullName -Raw                                                                                                    
+>>     if ($code -match 'writeR12' -and $code -notmatch 'Z12') {                                                                               
+>>         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z12",bd(val(m,"Product$EM")));'                                          
+>>     }                                                                                                                                       
+>>     if ($code -match 'writeR13' -and $code -notmatch 'Z13') {                                                                               
+>>         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z13",bd(val(m,"Product$EM")));'                                          
+>>     }                                                                                                                                       
+>>     Set-Content -Path $p.FullName -Value $code -Encoding utf8                                                                               
+>> }                                                                                                                                           
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("V12".*?;\) is not valid.
+At line:4 char:9
++         $code = $code -replace '(setNum\("V12".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("V12".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+The regular expression pattern (setNum\("Y13".*?;\) is not valid.
+At line:7 char:9
++         $code = $code -replace '(setNum\("Y13".*?;\)', '$1 setNum("Z1 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: ((setNum\("Y13".*?;\):String) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidRegularExpression
+ 
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> 
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Write-Host "All SOP updates successfully applied to project!" -ForegroundColor Green
+All SOP updates successfully applied to project!
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost>
