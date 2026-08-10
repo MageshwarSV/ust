@@ -1,12 +1,29 @@
-Here is the single command to run in your PowerShell terminal. It will print all errors directly in the terminal text so you can easily copy and paste them:
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; mvn clean compile 2>&1                                                                                                                                    
+mvn : The term 'mvn' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, 
+or if a path was included, verify that the path is correct and try again.
+At line:1 char:73
++ ... C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; mvn clean c ...
++                                                               ~~~
+    + CategoryInfo          : ObjectNotFound: (mvn:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
 
-powershell
-Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; mvn clean compile 2>&1
-If mvn is not recognized, use .\mvnw:
-
-powershell
-Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; .\mvnw clean compile 2>&1
-What to do:
-Copy the line above and press Enter in your terminal.
-If any error appears, copy the text and paste it right here!
-4:37 PM
+Suggestion [3,General]: The command mvn was not found, but does exist in the current location. Windows PowerShell does not load commands from the current location by default. If you trust this command, instead type: ".\mvn". See "get-help about_Command_Precedence" for more details.
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; .\mvnw clean compile 2>&1                                                                                                                                 
+.\mvnw : Get-Content : Cannot find path 'C:\Users\143500\Desktop\awscost\awscost_feature\awscost\.mvn\wrapper\maven-wrapper.properties' 
+because it 
+At line:1 char:73
++ ... 0\Desktop\awscost\awscost_feature\awscost"; .\mvnw clean compile 2>&1
++                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Get-Content : C...es' because it :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+does not exist.
+At line:54 char:21
++ ... utionUrl = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\143500...pper.properties:String) [Get-Content], ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+Cannot start maven from wrapper  
+PS C:\Users\143500\Desktop\awscost\aws
