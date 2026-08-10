@@ -1,10 +1,17 @@
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
-java: illegal character: '\ufeff'
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
-java: class, interface, enum, or record expected
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:2
-java: class, interface, enum, or record expected
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:3
-java: class, interface, enum, or record expected
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:4
-java: class, interface, enum, or record expected
+$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+
+Get-ChildItem -Recurse "$baseDir\*.java" | ForEach-Object {
+    $filePath = $_.FullName
+    $content = [System.IO.File]::ReadAllText($filePath)
+    
+    # Strip \ufeff BOM character if present
+    if ($content.StartsWith([char]0xFEFF)) {
+        $content = $content.Substring(1)
+    }
+    
+    # Save cleanly as UTF-8 WITHOUT BOM
+    [System.IO.File]::WriteAllText($filePath, $content, $utf8NoBom)
+}
+
+Write-Host "All BOM (\ufeff) characters stripped successfully! Code will compile clean now." -ForegroundColor Green
