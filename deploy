@@ -1,30 +1,8 @@
-# 1. Restore all Java files from export.txt backup
-$exportPath = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\export.txt"
+$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
-if (Test-Path $exportPath) {
-    $rawText = [System.IO.File]::ReadAllText($exportPath)
-    $sections = $rawText -split "=== FILE: "
-
-    foreach ($sec in $sections) {
-        if ($sec.Trim().Length -eq 0 -or -not ($sec -like "*src\main\java*")) { continue }
-        $lines = $sec -split "`r`n|`n"
-        $filePath = $lines[0].Trim()
-        $fileContent = ($lines[1..($lines.Length - 1)]) -join "`r`n"
-        
-        $dir = [System.IO.Path]::GetDirectoryName($filePath)
-        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
-        [System.IO.File]::WriteAllText($filePath, $fileContent, $utf8NoBom)
-    }
-    Write-Host "1. All Java files successfully restored from export.txt!" -ForegroundColor Green
-} else {
-    Write-Host "export.txt not found at $exportPath" -ForegroundColor Red
-}
-
-# 2. Update W12 formula in CostExplorerDev.java
-$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
+# 1. Update W12 formula in CostExplorerDev.java
 $cePath = "$baseDir\awsDev\CostExplorerDev.java"
-
 if (Test-Path $cePath) {
     $ceContent = [System.IO.File]::ReadAllText($cePath)
     $oldLine = 'double ec2 = total - new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue() + common;'
@@ -37,11 +15,11 @@ Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service")
     if ($ceContent.Contains($oldLine)) {
         $ceContent = $ceContent.Replace($oldLine, $newLine)
         [System.IO.File]::WriteAllText($cePath, $ceContent, $utf8NoBom)
-        Write-Host "2. CostExplorerDev.java updated with SOP W12 formula!" -ForegroundColor Green
+        Write-Host "CostExplorerDev.java updated with SOP W12 formula!" -ForegroundColor Green
     }
 }
 
-# 3. Update Z12 & Z13 in Excel processors
+# 2. Update Z12 & Z13 in Excel processors
 Get-ChildItem "$baseDir\excel\*ExcelProcessor.java" | ForEach-Object {
     $code = [System.IO.File]::ReadAllText($_.FullName)
     $v12Old = 'setNum("V12",bd(val(m,ExcelMapper.V12)));'
@@ -58,5 +36,4 @@ Get-ChildItem "$baseDir\excel\*ExcelProcessor.java" | ForEach-Object {
     [System.IO.File]::WriteAllText($_.FullName, $code, $utf8NoBom)
 }
 
-Write-Host "3. All Excel Processors updated with Z12 & Z13!" -ForegroundColor Green
-Write-Host "`nRESTORATION COMPLETE! CLICK BUILD IN INTELLIJ NOW!" -ForegroundColor Yellow
+Write-Host "All SOP updates applied! Now rebuild in IntelliJ!" -ForegroundColor Green
