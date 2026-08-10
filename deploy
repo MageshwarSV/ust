@@ -1,13 +1,3079 @@
-$outputFile = "export.txt"
+--- FILE STRUCTURE ---
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AmeribenExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BcbsksExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\CloverExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\DefaultExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\GhcExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IbxExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IuhpExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\MedstarExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\PhcExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\QualityExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\WyoblueExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ZingExcelProcessor.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\DateUtil.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\ExcelMapper.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CompanyProfile.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CostRequest.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CostResponse.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CredentialsReader.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\DownloadRequest.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\Environment.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\Model.java
+C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\index.html
+C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\Index2.html
+C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\index3.html
+C:\Users\143500\Desktop\awscost\awscost\src\test\java\com\healthproof\intplus\awscost\AwsCostApplicationTests.java
+C:\Users\143500\Desktop\awscost\awscost\target\classes\static\index.html
+C:\Users\143500\Desktop\awscost\awscost\target\classes\static\Index2.html
+C:\Users\143500\Desktop\awscost\awscost\target\classes\static\index3.html
 
-# 1. Top: File Structure
-"--- FILE STRUCTURE ---" | Out-File $outputFile -Encoding utf8
-$files = Get-ChildItem -Recurse -Include *.java, *.html
-$files | Select-Object -ExpandProperty FullName | Out-File $outputFile -Append -Encoding utf8
+--- FILE CONTENTS ---
 
-# 2. Below: File Name followed by File Code
-"`n--- FILE CONTENTS ---" | Out-File $outputFile -Append -Encoding utf8
-foreach ($file in $files) {
-    "`n=== FILE: $($file.FullName) ===" | Out-File $outputFile -Append -Encoding utf8
-    Get-Content $file.FullName -Raw | Out-File $outputFile -Append -Encoding utf8
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java ===
+package com.healthproof.intplus.awscost.awsDev;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.http.SdkHttpConfigurationOption;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.*;
+import software.amazon.awssdk.thirdparty.jackson.core.JsonProcessingException;
+import software.amazon.awssdk.utils.AttributeMap;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentDate;
+import static com.healthproof.intplus.awscost.util.DateUtil.getPreviousDate;
+@Service
+public class CostExplorerDev {
+    private CostExplorerClient caClient;
+    private Model model;
+    private List<Map<String, Object>> rawQueriesData;
+    private String startDate;
+    private String endDate;
+    public Model getModel() { return model; }
+    public List<Map<String, Object>> getRawQueriesData() { return rawQueriesData; }
+    public void start(String profileName, String environment, String startDate, String endDate) throws Exception {
+        this.rawQueriesData = new ArrayList<>();
+        this.startDate = startDate;
+        this.endDate = endDate;
+        init(profileName);
+        getH4andH5(); getR12Values(); getNoTagAndCloudWatch(); calculateCommonService(); getRow13Values();
+        System.out.println("********----->: Profile=" + profileName + " | Env=" + environment);
+        model.printR12(); model.printR13(); model.printH4H5(); model.printR14();
+    }
+    private void init(String profileName) throws JsonProcessingException {
+        this.model = new Model();
+        caClient = CostExplorerClient.builder()
+                .credentialsProvider(ProfileCredentialsProvider.create(profileName))
+                .region(software.amazon.awssdk.regions.Region.US_EAST_1)
+                .httpClient(ApacheHttpClient.builder().buildWithDefaults(AttributeMap.builder()
+                        .put(SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES, Boolean.TRUE).build()))
+                .build();
+    }
+    public void getH4andH5() {
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("RECORD_TYPE").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("H4_H5", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapH4H5().put(g.keys().get(0), v.amount()))));
+    }
+    public void getR12Values() throws JsonProcessingException {
+        Expression ex = Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.TAG).key("Product").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R12", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR12().put(g.keys().get(0), v.amount()))));
+    }
+    public void getNoTagAndCloudWatch() {
+        Expression ex = Expression.builder().and(
+                Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                        .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build(),
+                Expression.builder().tags(TagValues.builder().key("Product").values("").build()).build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("SERVICE").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R14", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR14().put(g.keys().get(0), v.amount()))));
+    }
+    public void getRow13Values() {
+        Expression ex = Expression.builder().dimensions(DimensionValues.builder().key(Dimension.RECORD_TYPE)
+                .values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.TAG).key("Product").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R13", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR13().put(g.keys().get(0), v.amount()))));
+    }
+    private void calculateCommonService() {
+        Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);
+        Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);
+        Object y12Obj = model.getModelMapR14().get(ExcelMapper.Y12);
+
+        double common = new BigDecimal(commonObj != null ? commonObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double total = new BigDecimal(totalObj != null ? totalObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double ec2 = total - new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue() + common;
+        model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));
+    }
+    private void recordRawResponse(String queryName, GetCostAndUsageResponse response) {
+        Map<String, Object> queryRecord = new LinkedHashMap<>();
+        queryRecord.put("queryType", queryName);
+        List<Map<String, Object>> results = new ArrayList<>();
+        if (response != null && response.resultsByTime() != null) {
+            for (ResultByTime result : response.resultsByTime()) {
+                Map<String, Object> timeRecord = new LinkedHashMap<>();
+                timeRecord.put("timePeriod", Map.of("start", result.timePeriod().start(), "end", result.timePeriod().end()));
+                timeRecord.put("estimated", result.estimated());
+                List<Map<String, Object>> groups = new ArrayList<>();
+                if (result.groups() != null) {
+                    for (Group group : result.groups()) {
+                        Map<String, Object> groupRecord = new LinkedHashMap<>();
+                        groupRecord.put("keys", group.keys());
+                        Map<String, Map<String, String>> metrics = new LinkedHashMap<>();
+                        if (group.metrics() != null) {
+                            group.metrics().forEach((k, v) -> {
+                                metrics.put(k, Map.of("amount", v.amount(), "unit", v.unit()));
+                            });
+                        }
+                        groupRecord.put("metrics", metrics);
+                        groups.add(groupRecord);
+                    }
+                }
+                timeRecord.put("groups", groups);
+                results.add(timeRecord);
+            }
+        }
+        queryRecord.put("results", results);
+        rawQueriesData.add(queryRecord);
+    }
 }
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java ===
+package com.healthproof.intplus.awscost.contorller;
+import com.healthproof.intplus.awscost.*;
+import com.healthproof.intplus.awscost.awsDev.CostExplorerDev;
+import com.healthproof.intplus.awscost.excel.BaseExcelProcessor;
+import com.healthproof.intplus.awscost.excel.ExcelProcessorFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import java.io.*;
+import java.util.*;
+import static com.healthproof.intplus.awscost.util.DateUtil.getCurrentTimeStamp;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_FILE_NAME;
+import static com.healthproof.intplus.awscost.util.ExcelMapper.OUTPUT_PATH;
+@RestController
+public class CostContorller {
+    @Autowired private ExcelProcessorFactory processorFactory;
+    @Autowired private CostExplorerDev costExplorerDev;
+    @Autowired private CredentialsReader credentialsReader;
+    @Value("${excel.output.file.path}") private String outFilePath;
+    
+    @GetMapping("/api/profiles")
+    public List<CompanyProfile> getProfiles() throws IOException { return credentialsReader.readProfiles(); }
+    
+    @PostMapping("/api/generate")
+    public Map<String, Serializable> generate(@RequestBody CostRequest request) throws Exception {
+        List<Model> models = new ArrayList<>();
+        Map<String, List<Map<String, Object>>> allRawData = new LinkedHashMap<>();
+        String ymStr = request.getYearMonth();
+        java.time.YearMonth ym;
+        if (ymStr == null || ymStr.trim().isEmpty() || ymStr.equalsIgnoreCase("DEFAULT")) {
+            ym = java.time.YearMonth.now().minusMonths(1);
+        } else {
+            ym = java.time.YearMonth.parse(ymStr.trim());
+        }
+        String startDate = ym.atDay(1).toString();
+        String endDate = ym.plusMonths(1).atDay(1).toString();
+        java.time.format.DateTimeFormatter formatMonthYear = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+        String monthYearName = ym.format(formatMonthYear).toUpperCase();
+        
+        for (int i = 0; i < request.getProfiles().size(); i++) {
+            String profile = request.getProfiles().get(i);
+            String env = request.getEnvironments().get(i);
+            costExplorerDev.start(profile, env, startDate, endDate);
+            models.add(costExplorerDev.getModel());
+            allRawData.put(profile, costExplorerDev.getRawQueriesData());
+        }
+        
+        BaseExcelProcessor excelProcessor = processorFactory.getProcessor(request.getCompanyName());
+        excelProcessor.start(request.getCompanyName(), request.getEnvironments(), models, monthYearName);
+        
+        saveRawDataJson(excelProcessor.getFileName(), allRawData);
+        return Map.of("id","1","message","Report generated!","code",200,
+                "timeStamp",getCurrentTimeStamp(),"fileName",excelProcessor.getFileName(),"status","success");
+    }
+    
+    private void saveRawDataJson(String excelFileName, Object data) {
+        try {
+            if (excelFileName == null || !excelFileName.contains(".")) return;
+            String jsonFileName = excelFileName.substring(0, excelFileName.lastIndexOf(".")) + ".json";
+            File jsonFile = new File(outFilePath + File.separator + jsonFileName);
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
+            System.out.println("Consolidated Raw AWS data saved to: " + jsonFile.getAbsolutePath());
+        } catch (Exception e) {
+            System.err.println("Failed to save raw AWS data JSON: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @GetMapping("/downloads/{filename}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
+        File file = new File(outFilePath + File.separator + filename);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(bos.toByteArray());
+        }
+    }
+    
+    @PostMapping("/downloads")
+    public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
+        File file = new File(OUTPUT_PATH + OUTPUT_FILE_NAME);
+        try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[(int)file.length()]; int n;
+            while ((n = fis.read(buf)) != -1) bos.write(buf, 0, n);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"report.xlsx\"")
+                    .body(bos.toByteArray());
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import java.io.*;
+import java.math.*;
+import java.nio.file.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+@Service
+public class AdvancedExcelProcessor {
+    @Value("${excel.template.file.path}") private String templateFilePath;
+    @Value("${excel.template.file.name}") private String templateFileName;
+    @Value("${excel.input.file.path}") private String inputFilePath;
+    @Value("${excel.input.file.name}") private String inputFileName;
+    @Value("${excel.output.file.path}") private String outFilePath;
+    private Workbook workbook; private String fileName; private Sheet sheet;
+    public String getFileName() { return fileName; }
+    public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
+        String tp = templateFilePath+File.separator+companyName.toLowerCase()+"_"+templateFileName+ExcelMapper.FILE_EXTENSION;
+        if (!new File(tp).exists()) {
+            tp = templateFilePath+File.separator+templateFileName+ExcelMapper.FILE_EXTENSION;
+        }
+        try (InputStream fis = new FileInputStream(tp)) { workbook = new XSSFWorkbook(fis); workbook.setForceFormulaRecalculation(true); }
+        for (int i = 0; i < environments.size(); i++) {
+            String env = environments.get(i); Model model = models.get(i);
+            sheet = workbook.getSheet(companyName.toUpperCase()+"-"+env.toUpperCase());
+            if (sheet == null) { System.out.println("Sheet not found: "+companyName.toUpperCase()+"-"+env.toUpperCase()); continue; }
+            initSheet(companyName, env, monthYearName);
+            writeR12(model.getModelMapR12(), companyName, env);
+            writeR14(model.getModelMapR14(), companyName, env);
+            writeR13(model.getModelMapR13(), companyName, env);
+            writeESPCost();
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
+        }
+        this.fileName = generateVersionedFileName(companyName, monthYearName);
+        writeExcel(); copyFileToInputDirectory();
+    }
+    private String generateVersionedFileName(String companyName, String monthYearName) {
+        String base = "USTHP_"+companyName+"_AWS_SERVICE_COST_"+monthYearName+"-V";
+        File[] ex = new File(outFilePath).listFiles((d,n)->n.startsWith(base)&&n.endsWith(ExcelMapper.FILE_EXTENSION));
+        int v=1; if(ex!=null) for(File f:ex){try{int x=Integer.parseInt(f.getName().substring(base.length(),f.getName().length()-ExcelMapper.FILE_EXTENSION.length()));if(x>=v)v=x+1;}catch(Exception ignored){}}
+        return base+v+ExcelMapper.FILE_EXTENSION;
+    }
+    private boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    private void initSheet(String c,String e,String monthYearName){
+        if(!check(c,e))return;
+        String fullMonthName;
+        try {
+            java.time.format.DateTimeFormatter parser = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+            java.time.YearMonth ym = java.time.YearMonth.parse(monthYearName.toUpperCase(), parser);
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", java.util.Locale.ENGLISH);
+            fullMonthName = ym.format(formatter);
+        } catch (Exception ex) {
+            fullMonthName = monthYearName;
+        }
+        setStr("H3",fullMonthName);setNum("H4",0);setNum("H5",0);setNum("H6",0);
+        for(int i=1;i<27;i++){sheet.getRow(11).getCell(i).setCellValue(0);sheet.getRow(12).getCell(i).setCellValue(0);sheet.getRow(13).getCell(i).setCellValue(0);}
+    }
+    public void writeH4H5(Map m,String c,String e){
+        if(!check(c,e))return;
+        double tax = bd(val(m,"Tax"));
+        setNum("H4", bd(val(m,ExcelMapper.H4)) + tax);
+        setNum("H5", bd(val(m,ExcelMapper.H5)));
+    }
+    public void writeR12(Map m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("PROD"))setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        setNum("Z12",bd(val(m,"Product$EM")));
+    }
+    public void writeR14(Map m,String c,String e){if(!check(c,e))return;setNum("W12",bd(val(m,ExcelMapper.W12)));setNum("Y12",bd(val(m,ExcelMapper.Y12)));}
+    public void writeR13(Map m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        if(c.equalsIgnoreCase("IBX")&&e.equalsIgnoreCase("CS"))setNum("W13",bd(val(m,ExcelMapper.W13)));
+        setNum("Z13",bd(val(m,"Product$EM")));
+    }
+    private void writeESPCost(){setNum("H6",0);setNum("AA12",0);}
+    private double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
+    private String val(Map<String,String> m,String k){return m.get(k)!=null?m.get(k).toString():"0";}
+    private void setNum(String ref,double v){CellReference cr=new CellReference(ref);Row r=sheet.getRow(cr.getRow());if(r==null)return;Cell c=r.getCell(cr.getCol());if(c==null)return;c.setCellValue(v);}
+    private void setStr(String ref,String v){CellReference cr=new CellReference(ref);Row r=sheet.getRow(cr.getRow());if(r==null)return;Cell c=r.getCell(cr.getCol());if(c==null)return;c.setCellValue(v);}
+    private void writeExcel() throws IOException{
+        workbook.setForceFormulaRecalculation(true);
+        try(FileOutputStream fos=new FileOutputStream(outFilePath+File.separator+fileName)){workbook.write(fos);workbook.close();}
+    }
+    private void copyFileToInputDirectory() throws IOException{Path dest=Paths.get(inputFilePath+File.separator+inputFileName+ExcelMapper.FILE_EXTENSION);if(Files.notExists(dest))Files.createFile(dest);Files.copy(Paths.get(outFilePath+File.separator+fileName),dest,StandardCopyOption.REPLACE_EXISTING);}
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AmeribenExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("ameribenExcelProcessor")
+public class AmeribenExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Ameriben".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Ameriben".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import java.io.*;
+import java.math.*;
+import java.nio.file.*;
+import java.util.*;
+
+public abstract class BaseExcelProcessor {
+    @Value("${excel.template.file.path}") protected String templateFilePath;
+    @Value("${excel.template.file.name}") protected String templateFileName;
+    @Value("${excel.input.file.path}") protected String inputFilePath;
+    @Value("${excel.input.file.name}") protected String inputFileName;
+    @Value("${excel.output.file.path}") protected String outFilePath;
+    protected Workbook workbook; protected Sheet sheet; protected String fileName;
+    protected String currentMonthYearName;
+    
+    public void start(String companyName, List<String> environments, List<Model> models, String monthYearName) throws IOException {
+        this.currentMonthYearName = monthYearName;
+        String basePattern = "USTHP_" + companyName + "_AWS_SERVICE_COST_" + monthYearName + "-V";
+        File outputDir = new File(outFilePath);
+        if (!outputDir.exists()) outputDir.mkdirs();
+        File[] existing = outputDir.listFiles((d, n) -> n.startsWith(basePattern) && n.endsWith(ExcelMapper.FILE_EXTENSION));
+        int version = 1;
+        if (existing != null) {
+            for (File f : existing) {
+                try {
+                    int x = Integer.parseInt(f.getName().substring(basePattern.length(), f.getName().length() - ExcelMapper.FILE_EXTENSION.length()));
+                    if (x >= version) version = x + 1;
+                } catch (Exception ignored) {}
+            }
+        }
+        this.fileName = basePattern + version + ExcelMapper.FILE_EXTENSION;
+        
+        String tplPath = templateFilePath + File.separator + companyName.toLowerCase() + "_template.xlsx";
+        File tplFile = new File(tplPath);
+        if (!tplFile.exists()) tplPath = templateFilePath + File.separator + templateFileName + ExcelMapper.FILE_EXTENSION;
+        try (FileInputStream fis = new FileInputStream(tplPath)) { this.workbook = new XSSFWorkbook(fis); }
+
+        for (int i = 0; i < environments.size(); i++) {
+            String env = environments.get(i); Model model = models.get(i);
+            String sheetName = companyName + "-" + env;
+            sheet = workbook.getSheet(sheetName);
+            if (sheet == null) {
+                for(int s=0; s<workbook.getNumberOfSheets(); s++){
+                    if(workbook.getSheetName(s).equalsIgnoreCase(sheetName)){ sheet = workbook.getSheetAt(s); break; }
+                }
+            }
+            if (sheet == null) { System.out.println("Sheet not found: "+sheetName); continue; }
+            
+            initSheet(companyName, env, monthYearName);
+            writeH4H5(model.getModelMapH4H5(), companyName, env);
+            writeR12(model.getModelMapR12(), companyName, env);
+            writeR14(model.getModelMapR14(), companyName, env);
+            writeR13(model.getModelMapR13(), companyName, env);
+            writeESPCost();
+        }
+        writeExcel(); copyFileToInputDirectory();
+    }
+    
+    protected boolean check(String c,String e){return sheet!=null&&sheet.getSheetName().equalsIgnoreCase(c+"-"+e);}
+    
+    protected String getTargetCol(String monthYearName) {
+        String fullMonthName = "";
+        String shortMonthName = "";
+        try {
+            java.time.format.DateTimeFormatter parser = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+            java.time.YearMonth ym = java.time.YearMonth.parse(monthYearName.toUpperCase(), parser);
+            
+            java.time.format.DateTimeFormatter fullFormatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", java.util.Locale.ENGLISH);
+            fullMonthName = ym.format(fullFormatter);
+            
+            java.time.format.DateTimeFormatter shortFormatter = java.time.format.DateTimeFormatter.ofPattern("MMM yyyy", java.util.Locale.ENGLISH);
+            shortMonthName = ym.format(shortFormatter);
+        } catch (Exception ex) {
+            fullMonthName = monthYearName;
+            shortMonthName = monthYearName;
+        }
+
+        Row row = sheet.getRow(2); // Row 3
+        if (row != null) {
+            for (int colIndex = 7; colIndex < 20; colIndex++) { // Columns H to T
+                Cell cell = row.getCell(colIndex);
+                if (cell != null) {
+                    String val = "";
+                    if (cell.getCellType() == CellType.STRING) {
+                        val = cell.getStringCellValue();
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
+                        if (DateUtil.isCellDateFormatted(cell)) {
+                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMM yyyy", java.util.Locale.ENGLISH);
+                            val = sdf.format(cell.getDateCellValue());
+                        } else {
+                            val = String.valueOf(cell.getNumericCellValue());
+                        }
+                    }
+                    val = val.trim();
+                    if (val.equalsIgnoreCase(fullMonthName) || val.equalsIgnoreCase(shortMonthName) || val.equalsIgnoreCase(monthYearName)) {
+                        return CellReference.convertNumToColString(colIndex);
+                    }
+                }
+            }
+        }
+        return "H"; // Fallback to column H if no match is found
+    }
+    
+    protected void initSheet(String c,String e,String monthYearName){
+        if(!check(c,e))return;
+        String col = getTargetCol(monthYearName);
+        String fullMonthName;
+        try {
+            java.time.format.DateTimeFormatter parser = java.time.format.DateTimeFormatter.ofPattern("MMMyy", java.util.Locale.ENGLISH);
+            java.time.YearMonth ym = java.time.YearMonth.parse(monthYearName.toUpperCase(), parser);
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", java.util.Locale.ENGLISH);
+            fullMonthName = ym.format(formatter);
+        } catch (Exception ex) {
+            fullMonthName = monthYearName;
+        }
+        setStr(col + "3",fullMonthName);setNum(col + "4",0);setNum(col + "5",0);setNum(col + "6",0);
+        for(int i=1;i<27;i++){
+            if(sheet.getRow(11)!=null && sheet.getRow(11).getCell(i)!=null) sheet.getRow(11).getCell(i).setCellValue(0);
+            if(sheet.getRow(12)!=null && sheet.getRow(12).getCell(i)!=null) sheet.getRow(12).getCell(i).setCellValue(0);
+            if(sheet.getRow(13)!=null && sheet.getRow(13).getCell(i)!=null) sheet.getRow(13).getCell(i).setCellValue(0);
+        }
+    }
+    
+    protected void writeH4H5(Map m,String c,String e){
+        if(!check(c,e))return;
+        String col = getTargetCol(currentMonthYearName);
+        double tax = bd(val(m,"Tax"));
+        setNum(col + "4", bd(val(m,ExcelMapper.H4)) + tax);
+        setNum(col + "5", bd(val(m,ExcelMapper.H5)));
+    }
+    
+    protected abstract void writeR12(Map<String,String> m,String c,String e);
+    protected abstract void writeR14(Map<String,String> m,String c,String e);
+    protected abstract void writeR13(Map<String,String> m,String c,String e);
+    
+    protected void writeESPCost(){
+        String col = getTargetCol(currentMonthYearName);
+        setNum(col + "6",0);setNum("AA12",0);
+    }
+    protected double bd(String v){return new BigDecimal(v).setScale(2,RoundingMode.HALF_UP).doubleValue();}
+    
+    protected String val(Map<String,String> m,String k){
+        if(m.get(k)!=null) return m.get(k).toString();
+        String fallbackNoHyphen = k.replaceAll("-(\\d+)$", "$1"); 
+        if(m.get(fallbackNoHyphen)!=null) return m.get(fallbackNoHyphen).toString();
+        String fallbackWithHyphen = k.replaceAll("(?<!-)(\\d+)$", "-$1");
+        if(m.get(fallbackWithHyphen)!=null) return m.get(fallbackWithHyphen).toString();
+        return "0";
+    }
+    
+    protected void setNum(String ref, double val) {
+        Cell c = getCell(ref); if (c != null) { c.setCellValue(val); }
+    }
+    protected void setStr(String ref, String val) {
+        Cell c = getCell(ref); if (c != null) c.setCellValue(val);
+    }
+    protected Cell getCell(String ref) {
+        CellReference cr = new CellReference(ref);
+        Row r = sheet.getRow(cr.getRow());
+        if (r == null) r = sheet.createRow(cr.getRow());
+        Cell c = r.getCell(cr.getCol());
+        if (c == null) c = r.createCell(cr.getCol());
+        return c;
+    }
+    
+    protected void writeExcel() throws IOException {
+        workbook.setForceFormulaRecalculation(true);
+        try (FileOutputStream fos = new FileOutputStream(outFilePath + File.separator + fileName)) { 
+            workbook.write(fos); workbook.close(); 
+        }
+    }
+    
+    protected void copyFileToInputDirectory() throws IOException {
+        Path dest = Paths.get(inputFilePath + File.separator + inputFileName + ExcelMapper.FILE_EXTENSION);
+        if (Files.notExists(dest)) Files.createFile(dest);
+        Files.copy(Paths.get(outFilePath + File.separator + fileName), dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+    public String getFileName() { return fileName; }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BcbsksExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("bcbsksExcelProcessor")
+public class BcbsksExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Bcbsks".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Bcbsks".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\CloverExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("cloverExcelProcessor")
+public class CloverExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Clover".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Clover".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\DefaultExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("defaultExcelProcessor")
+public class DefaultExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Default".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Default".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("emergientExcelProcessor")
+public class EmergientExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Emergient".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Emergient".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+
+import com.healthproof.intplus.awscost.CostRequest;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.file.*;
+import java.util.Map;
+
+import static com.healthproof.intplus.awscost.util.DateUtil.getRequiredDate;
+
+@Service
+public class ExcelProcessor {
+    @Value("${excel.template.file.path}")
+    private String templateFilePath;
+    @Value("${excel.template.file.name}")
+    private String templateFileName;
+
+    @Value("${excel.input.file.path}")
+    private String inputFilePath;
+    @Value("${excel.input.file.name}")
+    private String inputFileName;
+
+    @Value("${excel.output.file.path}")
+    private String outFilePath;
+    @Value("${excel.output.file.name}")
+    private String outputFileName;
+
+
+
+    private Workbook workbook;
+    private String fileName;
+    private CostRequest costRequest;
+    private Model model;
+    private Sheet sheet;
+    public String getFileName(){
+        return fileName;
+    }
+
+    public void start(CostRequest costRequest, Model model) throws IOException {
+        this.costRequest = costRequest;
+        this.model = model;
+        initExcel();
+        createFile();
+        writeH4H5(model.getModelMapH4H5());
+        writeR12(model.getModelMapR12());
+        writeR14(model.getModelMapR14());
+        writeR13(model.getModelMapR13());
+        writeExcel();
+        copyFileToInputDirectory();
+    }
+    private boolean checkSheetName(String sheetName){
+        return sheetName.equals(costRequest.getAccountName().toUpperCase()+"-"+costRequest.getEnvironment().toUpperCase());
+    }
+    private String decideSourcePath(){
+        String tmp="";
+        if(costRequest.getEnvironment().equalsIgnoreCase("DEV")){
+            return templateFilePath + File.separator + costRequest.getAccountName().toLowerCase() + "_" + templateFileName + ExcelMapper.FILE_EXTENSION;
+        } else {
+            return inputFilePath+File.separator+inputFileName+ExcelMapper.FILE_EXTENSION;
+        }
+    }
+    public void initExcel() throws IOException {
+        InputStream  fis = new FileInputStream(decideSourcePath());
+        workbook = new XSSFWorkbook(fis);
+        workbook.setForceFormulaRecalculation(true);
+        sheet = workbook.getSheet(costRequest.getAccountName().toUpperCase()+"-"+costRequest.getEnvironment().toLowerCase());
+          if(checkSheetName(sheet.getSheetName())){
+                System.out.println(" inside if ********");
+                CellReference ref = new CellReference("H3");
+                Row row = sheet.getRow(ref.getRow());
+                Cell cell = row.getCell(ref.getCol());
+                cell.setCellValue(getRequiredDate());
+
+                ref = new CellReference("H4");
+                row = sheet.getRow(ref.getRow());
+                cell = row.getCell(ref.getCol());
+                cell.setCellValue(0);
+
+                ref = new CellReference("H5");
+                row = sheet.getRow(ref.getRow());
+                cell = row.getCell(ref.getCol());
+                cell.setCellValue(0);
+
+                ref = new CellReference("H6");
+                row = sheet.getRow(ref.getRow());
+                cell = row.getCell(ref.getCol());
+                cell.setCellValue(0);
+
+                Row row11 = sheet.getRow(11);
+                for(int i=1;i<27;i++){
+                    row11.getCell(i).setCellValue(0);
+                }
+                Row row12 = sheet.getRow(12);
+                for(int i=1;i<27;i++){
+                    row12.getCell(i).setCellValue(0);
+                }
+                Row row13 = sheet.getRow(13);
+                for(int i=1;i<27;i++){
+                    row13.getCell(i).setCellValue(0);
+                }
+        }
+       fis.close();
+    }
+    public void writeH4H5(Map h4h5Map){
+            if (checkSheetName(sheet.getSheetName())) {
+                CellReference ref = new CellReference("H4");
+                Row row = sheet.getRow(ref.getRow());
+                Cell cell = row.getCell(ref.getCol());
+                cell.setCellValue(new BigDecimal(h4h5Map.get(ExcelMapper.H4).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue());
+                ref = new CellReference("H5");
+                row = sheet.getRow(ref.getRow());
+                cell = row.getCell(ref.getCol());
+                cell.setCellValue(new BigDecimal(h4h5Map.get(ExcelMapper.H5).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue());
+            }
+
+    }
+    public void writeR12(Map r12Map){
+        CellReference ref = null;
+        if (checkSheetName(sheet.getSheetName())) {
+                ref = new CellReference("B12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.B12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+
+                ref = new CellReference("C12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.C12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+
+                ref = new CellReference("H12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.H12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("J12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.J12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("K12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.K12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("O12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.O12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("N12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.N12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                if(!costRequest.getEnvironment().equalsIgnoreCase("UAT")) {
+                    ref = new CellReference("U12");
+                    setCellValue(new BigDecimal(r12Map.get(ExcelMapper.U12).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+                }
+
+                if(costRequest.getEnvironment().equalsIgnoreCase("DEV")) {
+                    ref = new CellReference("V12");
+                    setCellValue(new BigDecimal(r12Map.get(ExcelMapper.V12).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+                }
+                if(costRequest.getEnvironment().equalsIgnoreCase("SIT") ||
+                        costRequest.getEnvironment().equalsIgnoreCase("UAT")) {
+                    ref = new CellReference("D12");
+                    setCellValue(new BigDecimal(r12Map.get(ExcelMapper.D12).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+
+                    ref = new CellReference("I12");
+                    setCellValue(new BigDecimal(r12Map.get(ExcelMapper.I12).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+                    ref = new CellReference("Q12");
+                    setCellValue(new BigDecimal(r12Map.get(ExcelMapper.Q12).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+
+                }
+            if(costRequest.getEnvironment().equalsIgnoreCase("UAT")){
+                ref = new CellReference("P12");
+                setCellValue(new BigDecimal(r12Map.get(ExcelMapper.P12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(), ref, sheet);
+            }
+            }
+    }
+    public void writeR14(Map r14Map) {
+        CellReference ref = null;
+            if (checkSheetName(sheet.getSheetName())) {
+                ref = new CellReference("W12");
+                setCellValue(new BigDecimal(r14Map.get(ExcelMapper.W12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("Y12");
+                setCellValue(new BigDecimal(r14Map.get(ExcelMapper.Y12).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+            }
+    }
+    public void writeR13(Map r13Map) {
+        CellReference ref = null;
+            if (checkSheetName(sheet.getSheetName())) {
+                ref = new CellReference("B13");
+                setCellValue(new BigDecimal(r13Map.get(ExcelMapper.B13).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("C13");
+                setCellValue(new BigDecimal(r13Map.get(ExcelMapper.C13).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                if(!costRequest.getEnvironment().equalsIgnoreCase("UAT")) {
+                    ref = new CellReference("K13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.K13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(), ref, sheet);
+                }
+                ref = new CellReference("H13");
+                setCellValue(new BigDecimal(r13Map.get(ExcelMapper.H13).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("O13");
+                setCellValue(new BigDecimal(r13Map.get(ExcelMapper.O13).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                ref = new CellReference("N13");
+                setCellValue(new BigDecimal(r13Map.get(ExcelMapper.N13).toString())
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue(),ref, sheet);
+                if(costRequest.getEnvironment().equalsIgnoreCase("SIT") ||
+                        costRequest.getEnvironment().equalsIgnoreCase("UAT")) {
+                    ref = new CellReference("J13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.J13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                    ref = new CellReference("Q13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.Q13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                    ref = new CellReference("D13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.D13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                    ref = new CellReference("I13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.I13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                }
+                if(costRequest.getEnvironment().equalsIgnoreCase("UAT")){
+                    ref = new CellReference("P13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.P13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                    ref = new CellReference("Q13");
+                    setCellValue(new BigDecimal(r13Map.get(ExcelMapper.Q13).toString())
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue(),ref, sheet);
+                }
+
+        }
+    }
+    private String getMapValue(Map<String, String> tmpMap, String key){
+        if(tmpMap.get(key) != null) return tmpMap.get(key);
+        else return "0";
+    }
+    private void setCellValue(double value, CellReference cellRef, Sheet sheet)
+    {
+        Row row = sheet.getRow(cellRef.getRow());
+        Cell cell = row.getCell(cellRef.getCol());
+        cell.setCellValue(value);
+    }
+    public void createFile() throws IOException {
+        String filePath = outFilePath + File.separator + outputFileName+"_"+
+                costRequest.getAccountName()+"_"+costRequest.getEnvironment()+ExcelMapper.FILE_EXTENSION;
+        Path path = Paths.get(filePath);
+        try {
+            Files.write(path, new byte[0], StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            System.out.println("File created successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void writeExcel() throws IOException {
+        String filePath = outFilePath + File.separator + outputFileName+"_"+
+                  costRequest.getAccountName()+"_"+costRequest.getEnvironment()+ExcelMapper.FILE_EXTENSION;
+        File file  = new File(filePath);
+        fileName = file.getName();
+        FileOutputStream fos = new FileOutputStream(file);
+        workbook.write(fos);
+        workbook.close();
+        fos.close();
+    }
+    private void copyFileToInputDirectory() throws IOException {
+        String destFilePath = inputFilePath + File.separator + inputFileName+ExcelMapper.FILE_EXTENSION;
+        String srcFilePath = outFilePath + File.separator + outputFileName+"_"+
+                costRequest.getAccountName()+"_"+costRequest.getEnvironment()+ExcelMapper.FILE_EXTENSION;
+        Path src = Paths.get(srcFilePath);
+        Path dest = Paths.get(destFilePath);
+        if (Files.notExists(dest)) {
+            Files.createFile(dest); // Creates a new empty file
+            System.out.println("file created as it was missing."+ destFilePath);
+        }
+        Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java ===
+package com.healthproof.intplus.awscost.excel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+@Service
+public class ExcelProcessorFactory {
+    @Autowired
+    private ApplicationContext context;
+    public BaseExcelProcessor getProcessor(String companyName) {
+        String beanName = companyName.toLowerCase() + "ExcelProcessor";
+        try {
+            return (BaseExcelProcessor) context.getBean(beanName);
+        } catch (Exception e) {
+            System.out.println("No specific processor found for " + companyName + ". Using default.");
+            return (BaseExcelProcessor) context.getBean("defaultExcelProcessor");
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\GhcExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("ghcExcelProcessor")
+public class GhcExcelProcessor extends BaseExcelProcessor {
+
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Write EM Suite cost to Z12 specifically for GHC
+        setNum("Z12",bd(val(m,"Product$EM")));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        // Write EM Suite cost to Z13 specifically for GHC
+        setNum("Z13",bd(val(m,"Product$EM")));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IbxExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("ibxExcelProcessor")
+public class IbxExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Ibx".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Ibx".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IuhpExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("iuhpExcelProcessor")
+public class IuhpExcelProcessor extends BaseExcelProcessor {
+
+    @Override
+    protected String val(Map<String, String> m, String k) {
+        double sum = 0;
+        boolean found = false;
+        if (m.containsKey(k)) {
+            sum += bd(m.get(k));
+            found = true;
+        }
+        String counterpart;
+        if (k.contains("-")) {
+            counterpart = k.replaceAll("-(\\d+)$", "$1");
+        } else {
+            counterpart = k.replaceAll("(?<!-)(\\d+)$", "-$1");
+        }
+        if (!counterpart.equals(k) && m.containsKey(counterpart)) {
+            sum += bd(m.get(counterpart));
+            found = true;
+        }
+        return found ? String.valueOf(sum) : "0";
+    }
+
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\MedstarExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("medstarExcelProcessor")
+public class MedstarExcelProcessor extends BaseExcelProcessor {
+
+    @Override
+    protected String val(Map<String,String> m, String k) {
+        if(m.get(k) != null) return m.get(k).toString();
+        String noHyphen = k.replaceAll("-(\\d+)$", "$1"); 
+        if(m.get(noHyphen) != null) return m.get(noHyphen).toString();
+        String withHyphen = k.replaceAll("(?<!-)(\\d+)$", "-$1");
+        if(m.get(withHyphen) != null) return m.get(withHyphen).toString();
+        return "0";
+    }
+
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        
+        // Combine Integration Plus API Costs
+        double iplusApiTotal = bd(val(m, ExcelMapper.B12)) + bd(val(m, "Product$IPLUSAPI"));
+        setNum("B12", iplusApiTotal);
+        
+        setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));
+        
+        // ---- MEDSTAR SPECIFIC DATABASE MAPPINGS (On Demand) ----
+        setNum("N12", bd(val(m, "Product$DB-SERVER1")));
+        setNum("O12", bd(val(m, "Product$DB-SERVER2")));
+        setNum("P12", bd(val(m, "Product$DB-SERVER3")));
+        setNum("Q12", bd(val(m, "Product$DB-SERVER4")));
+        
+        setNum("R12", bd(val(m, "Product$RDS-SERVER-1")));
+        setNum("S12", bd(val(m, "Product$RDS-SERVER-2")));
+        setNum("T12", bd(val(m, "Product$RDS-SERVER-3")));
+        // --------------------------------------------------------
+
+        // FSx Volumes (On Demand Only)
+        setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        setNum("Z12", bd(val(m, "Product$EM")));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        
+        double iplusApiTotal = bd(val(m, ExcelMapper.B13)) + bd(val(m, "Product$IPLUSAPI"));
+        setNum("B13", iplusApiTotal);
+        
+        setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));
+        
+        // ---- MEDSTAR SPECIFIC DATABASE MAPPINGS (Compute Savings) ----
+        setNum("N13", bd(val(m, "Product$DB-SERVER1")));
+        setNum("O13", bd(val(m, "Product$DB-SERVER2")));
+        setNum("P13", bd(val(m, "Product$DB-SERVER3")));
+        setNum("Q13", bd(val(m, "Product$DB-SERVER4")));
+        
+        setNum("R13", bd(val(m, "Product$RDS-SERVER-1")));
+        setNum("S13", bd(val(m, "Product$RDS-SERVER-2")));
+        setNum("T13", bd(val(m, "Product$RDS-SERVER-3")));
+        // ------------------------------------------------------
+
+        setNum("Z13", bd(val(m, "Product$EM")));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\PhcExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("phcExcelProcessor")
+public class PhcExcelProcessor extends BaseExcelProcessor {
+
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        setNum("W13",bd(val(m,ExcelMapper.W13)));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\QualityExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("qualityExcelProcessor")
+public class QualityExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Quality".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Quality".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\WyoblueExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+@Component("wyoblueExcelProcessor")
+public class WyoblueExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ZingExcelProcessor.java ===
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+
+@Component("zingExcelProcessor")
+public class ZingExcelProcessor extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        
+        // Specific IBX rule to demonstrate isolated logic capability
+        if("Zing".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("PROD")) {
+            setNum("U12",bd(val(m,ExcelMapper.U12_1)));
+        }
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        
+        if("Zing".equalsIgnoreCase("IBX") && e.equalsIgnoreCase("CS")) {
+            setNum("W13",bd(val(m,ExcelMapper.W13)));
+        }
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java ===
+package com.healthproof.intplus.awscost.util;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+
+public class AWSConfig {
+
+    @Bean
+    public AwsCredentialsProvider awsCredentialsProvider(
+            @Value("${aws.accessKeyId}") String accessKey,
+            @Value("${aws.secretAccessKey}") String secretKey,
+            @Value("${aws.sessionToken:}") String sessionToken) {
+
+        if (sessionToken.isEmpty()) {
+            return StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(accessKey, secretKey));
+        }
+        return StaticCredentialsProvider.create(
+                AwsSessionCredentials.create(accessKey, secretKey, sessionToken));
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\DateUtil.java ===
+package com.healthproof.intplus.awscost.util;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+public class DateUtil {
+    public static String getRequiredDate(){
+        LocalDate now = LocalDate.now().minusMonths(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
+        String result = now.format(formatter);
+        System.out.println(result);
+        return result;
+    }
+    public static String getCurrentDate(){
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String currentFirst = today.withDayOfMonth(1).format(dtf);
+        return currentFirst;
+    }
+    public static String getPreviousDate(){
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String previousFirst = today.minusMonths(1).withDayOfMonth(1).format(dtf);
+        return previousFirst;
+    }
+    public static String getCurrentTimeStamp(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        String timeStamp = LocalDateTime.now().format(dateTimeFormatter);
+        return timeStamp;
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\util\ExcelMapper.java ===
+package com.healthproof.intplus.awscost.util;
+public class ExcelMapper {
+    public static final String TEMPLATE_PATH = "D:\\Users\\266741\\costsheet\\template\\";
+    public static final String TEMPLATE_FILE_NAME ="ibc_template.xlsx";
+    public static final String INPUT_PATH = "D:\\Users\\266741\\costsheet\\input\\";
+    public static final String INPUT_FILE_NAME = "input.xlsx";
+    public static final String OUTPUT_PATH = "D:\\Users\\266741\\costsheet\\output\\";
+    public static final String OUTPUT_FILE_NAME = "output.xlsx";
+    public static final String FILE_EXTENSION=".xlsx";
+    public static final String H4 = "Usage";
+    public static final String H5 = "SavingsPlanCoveredUsage";
+    public static final String NO_KEY_PRODUCT ="Product$";
+    public static final String C12 = "Product$IPLUS";
+    public static final String B12 = "Product$IPLUS-API";
+    public static final String K12 = "Product$QLIK-REPLICATE";
+    public static final String U12 = "Product$FSX-VOL1";
+    public static final String COMMON = "Product$COMMON";
+    public static final String J12 ="Product$QLIK-COMPOSE";
+    public static final String H12 = "Product$EDIFECS";
+    public static final String O12 = "Product$DB-SERVER-2";
+    public static final String N12 = "Product$DB-SERVER-1";
+    public static final String W12 = "Common EC2 Services";
+    public static final String Y12 = "AmazonCloudWatch";
+    public static final String C13 = "Product$IPLUS";
+    public static final String B13 = "Product$IPLUS-API";
+    public static final String K13 = "Product$QLIK-REPLICATE";
+    public static final String H13 = "Product$EDIFECS";
+    public static final String O13 = "Product$DB-SERVER-2";
+    public static final String N13 = "Product$DB-SERVER-1";
+    public static final String V12 = "Product$FSX-VOL2";
+    public static final String D12 = "Product$WPLUS";
+    public static final String D13 = "Product$WPLUS";
+    public static final String I12 = "Product$TABLEAU";
+    public static final String I13 = "Product$TABLEAU";
+    public static final String J13 ="Product$QLIK-COMPOSE";
+    public static final String Q12 = "Product$DB-SERVER4";
+    public static final String Q13 = "Product$DB-SERVER4";
+    public static final String P12 = "Product$DB-SERVER3";
+    public static final String P13 = "Product$DB-SERVER3";
+    public static final String R12 = "Product$RDS-SERVER-1";
+    public static final String S12 = "Product$RDS-SERVER-2";
+    public static final String T12 = "Product$RDS-SERVER-3";
+    public static final String U12_1 = "Product$FSX";
+    public static final String W13 = "Product$COMMON";
+    public static final String Y13 = "Product$";
+    public static final String AA12 = "Product$EM";
+    public static final String AA13 = "Product$EM";
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java ===
+package com.healthproof.intplus.awscost;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.healthproof.intplus.awscost"})
+public class AwsCostApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(AwsCostApplication.class, args);
+	}
+
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CompanyProfile.java ===
+package com.healthproof.intplus.awscost;
+import java.util.ArrayList;
+import java.util.List;
+public class CompanyProfile {
+    private String companyName;
+    private List<String> environments = new ArrayList<>();
+    private List<String> profiles = new ArrayList<>();
+    public CompanyProfile(String companyName) { this.companyName = companyName; }
+    public String getCompanyName() { return companyName; }
+    public List<String> getEnvironments() { return environments; }
+    public List<String> getProfiles() { return profiles; }
+    public void addEnvironment(String env) { environments.add(env); }
+    public void addProfile(String profile) { profiles.add(profile); }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CostRequest.java ===
+package com.healthproof.intplus.awscost;
+
+import java.util.List;
+
+public class CostRequest {
+    private String companyName;
+    private List<String> environments;
+    private List<String> profiles;
+
+    private String environment;
+    private String accountName;
+    private String espCost;
+    private String yearMonth;
+
+    public String getCompanyName() {
+        return companyName != null ? companyName : "IBX";
+    }
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public List<String> getEnvironments() { return environments; }
+    public void setEnvironments(List<String> environments) { this.environments = environments; }
+
+    public List<String> getProfiles() { return profiles; }
+    public void setProfiles(List<String> profiles) { this.profiles = profiles; }
+
+    public String getEnvironment() {
+        return environment != null ? environment : "DEV";
+    }
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
+    public String getAccountName() {
+        return accountName != null ? accountName : "IBX";
+    }
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getEspCost() {
+        return espCost != null ? espCost : "0";
+    }
+    public void setEspCost(String espCost) {
+        this.espCost = espCost;
+    }
+
+    public String getYearMonth() {
+        return yearMonth;
+    }
+    public void setYearMonth(String yearMonth) {
+        this.yearMonth = yearMonth;
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CostResponse.java ===
+package com.healthproof.intplus.awscost;
+
+public class CostResponse {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    private String id;
+    private String message;
+    private String code;
+    private String timeStamp;
+    private String fileName;
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\CredentialsReader.java ===
+package com.healthproof.intplus.awscost;
+import org.springframework.stereotype.Service;
+import java.io.*;
+import java.util.*;
+@Service
+public class CredentialsReader {
+    private String getCredentialsFilePath() {
+        return System.getProperty("user.home") + File.separator + ".aws" + File.separator + "credentials";
+    }
+    public List<CompanyProfile> readProfiles() throws IOException {
+        Map<String, Map<String, String>> raw = new LinkedHashMap<>();
+        String cur = null;
+        try (BufferedReader r = new BufferedReader(new FileReader(getCredentialsFilePath()))) {
+            String line;
+            while ((line = r.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("[") && line.endsWith("]")) {
+                    cur = line.substring(1, line.length() - 1);
+                    raw.put(cur, new LinkedHashMap<>());
+                } else if (cur != null && line.contains("=")) {
+                    String[] p = line.split("=", 2);
+                    raw.get(cur).put(p[0].trim().toLowerCase(), p[1].trim());
+                }
+            }
+        }
+        Map<String, CompanyProfile> grouped = new LinkedHashMap<>();
+        for (Map.Entry<String, Map<String, String>> e : raw.entrySet()) {
+            String pn = e.getKey();
+            String cn = e.getValue().get("company_name");
+            String ev = e.getValue().get("environment");
+            if (cn != null && ev != null) {
+                grouped.computeIfAbsent(cn, CompanyProfile::new);
+                grouped.get(cn).addEnvironment(ev.toUpperCase());
+                grouped.get(cn).addProfile(pn);
+            }
+        }
+        return new ArrayList<>(grouped.values());
+    }
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\DownloadRequest.java ===
+package com.healthproof.intplus.awscost;
+
+public class DownloadRequest {
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    private String fileName;
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\Environment.java ===
+package com.healthproof.intplus.awscost;
+
+public class Environment {
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\java\com\healthproof\intplus\awscost\Model.java ===
+package com.healthproof.intplus.awscost;
+
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+public class Model {
+
+    private Map<String,String> modelMapH4H5 = new HashMap<>();
+    private Map<String,String> modelMapR12 = new HashMap<>();
+    private Map<String,String> modelMapR14 = new HashMap<>();
+    private Map<String,String> modelMapR13 = new HashMap<>();
+
+    public Map<String, String> getModelMapH4H5() {
+        return modelMapH4H5;
+    }
+    public Map<String, String> getModelMapR12() {
+        return modelMapR12;
+    }
+    public Map<String, String> getModelMapR14(){
+        return modelMapR14;
+    }
+    public Map<String, String> getModelMapR13(){
+        return modelMapR13;
+    }
+
+    public void printH4H5(){
+        System.out.println("Model contents H4 & H5:");
+        for (Map.Entry<String, String> entry : modelMapH4H5.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+    public void printR12(){
+        System.out.println("Model contents R12 :");
+        for (Map.Entry<String, String> entry : modelMapR12.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+    public void printR13(){
+        System.out.println("Model contents R13 :");
+        for (Map.Entry<String, String> entry : modelMapR13.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+    public void printR14(){
+        System.out.println("Model contents R14 :");
+        for (Map.Entry<String, String> entry : modelMapR14.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\index.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>USTHP AWS Cost Report</title>
+  <style>
+    :root {
+      --primary: #a78bfa;
+      --secondary: #60a5fa;
+      --bg-gradient: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+      --card-bg: rgba(255,255,255,.05);
+      --card-border: rgba(255,255,255,.1);
+      --card-hover-bg: rgba(167,139,250,.1);
+      --card-selected-bg: rgba(167,139,250,.2);
+      --card-selected-border: #a78bfa;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",sans-serif;background:var(--bg-gradient);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px;color:#fff}
+    .header{text-align:center;margin-bottom:30px}
+    .header h1{font-size:2.5rem;letter-spacing:2px;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header p{color:#94a3b8;margin-top:8px}
+    
+    .controls-bar{display:flex;flex-wrap:wrap;gap:15px;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid var(--card-border);backdrop-filter:blur(10px);padding:15px 25px;border-radius:16px;margin-bottom:30px;width:100%;max-width:900px}
+    select{background:rgba(255,255,255,.07);border:1px solid var(--card-border);border-radius:8px;color:#fff;padding:10px 16px;font-size:.95rem;outline:none;cursor:pointer;transition:all .3s}
+    select:hover{background:rgba(255,255,255,.12);border-color:var(--primary)}
+    option{background:#1e1b4b;color:#fff}
+    
+    .btn{padding:10px 20px;border-radius:8px;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s;border:1px solid transparent}
+    .btn-secondary{background:rgba(255,255,255,.05);border-color:var(--card-border);color:#e5e7eb}
+    .btn-secondary:hover{background:rgba(255,255,255,.1);border-color:#9ca3af}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 4px 14px rgba(167,139,250,.3)}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(167,139,250,.45)}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+    
+    .buttons-container{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;max-width:900px;width:100%;margin-bottom:30px}
+    .company-card{position:relative;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:35px 25px;text-align:center;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);min-width:200px;backdrop-filter:blur(10px);user-select:none}
+    .company-card:hover{background:var(--card-hover-bg);border-color:rgba(167,139,250,.4);transform:translateY(-4px)}
+    .company-card.selected{background:var(--card-selected-bg);border-color:var(--card-selected-border);box-shadow:0 0 20px rgba(167,139,250,.25)}
+    
+    .card-checkbox{position:absolute;top:15px;right:15px;width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;transition:all .2s;background:rgba(0,0,0,.2)}
+    .company-card.selected .card-checkbox{background:var(--primary);border-color:var(--primary)}
+    .card-checkbox::after{content:'';width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);display:none;margin-bottom:2px}
+    .company-card.selected .card-checkbox::after{display:block}
+    
+    .company-name{font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:10px}
+    .company-card.selected .company-name{color:#a78bfa}
+    
+    .status-badge{font-size:.8rem;padding:4px 12px;border-radius:12px;display:inline-block;font-weight:600;background:rgba(255,255,255,.05);color:#9ca3af;margin-top:10px}
+    .status-badge.idle{display:none}
+    .status-badge.generating{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+    .status-badge.completed{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+    .status-badge.failed{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+    
+    .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    .status-box{margin-top:20px;max-width:900px;width:100%;border-radius:12px;padding:20px 24px;display:none}
+    .status-box.active{display:block;background:rgba(255,255,255,.03);border:1px solid var(--card-border)}
+    .log-entry{margin-bottom:8px;font-family:monospace;font-size:.9rem;display:flex;align-items:center;gap:10px}
+    .log-success{color:#34d399}
+    .log-error{color:#f87171}
+    .log-info{color:#60a5fa}
+    .download-link{color:#60a5fa;text-decoration:underline;cursor:pointer}
+    .loading-msg{color:#94a3b8;margin-top:30px;font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div class="header"><h1>USTHP AWS Cost Report</h1><p>Select companies to generate and download monthly cost reports</p></div>
+  
+  <div class="controls-bar">
+    <select id="companyFilter"><option value="ALL">All Accounts</option></select>
+    <select id="monthSelect"></select>
+    <button class="btn btn-secondary" id="btnSelectAll">Select All</button>
+    <button class="btn btn-secondary" id="btnDeselectAll">Clear</button>
+    <button class="btn btn-primary" id="btnGenerate" disabled>Generate Selected (0)</button>
+  </div>
+
+  <div class="buttons-container" id="bc"><p class="loading-msg">Loading companies...</p></div>
+  <div class="status-box" id="sb"></div>
+
+  <script>
+    let allProfiles = [];
+    let selectedCompanies = new Set();
+    let cardStatuses = {};
+
+    function populateMonths() {
+      const monthSelect = document.getElementById('monthSelect');
+      monthSelect.innerHTML = '';
+      
+      const defOpt = document.createElement('option');
+      defOpt.value = 'DEFAULT';
+      defOpt.textContent = 'Default (Previous Month)';
+      defOpt.selected = true;
+      monthSelect.appendChild(defOpt);
+
+      const now = new Date();
+      for (let i = 1; i <= 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const opt = document.createElement('option');
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        opt.value = `${year}-${month}`;
+        const monthName = d.toLocaleString('default', { month: 'long' });
+        opt.textContent = `${monthName} ${year}`;
+        monthSelect.appendChild(opt);
+      }
+    }
+
+    async function load() {
+      try {
+        populateMonths();
+        const res = await fetch('/awscost/api/profiles');
+        allProfiles = await res.json();
+        
+        const filterSelect = document.getElementById('companyFilter');
+        filterSelect.innerHTML = '<option value="ALL">All Accounts</option>';
+        allProfiles.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.companyName;
+          opt.textContent = p.companyName;
+          filterSelect.appendChild(opt);
+        });
+
+        allProfiles.forEach(p => {
+          if (!cardStatuses[p.companyName]) {
+            cardStatuses[p.companyName] = { status: 'idle', msg: 'Idle' };
+          }
+        });
+
+        render();
+      } catch (e) {
+        document.getElementById('bc').innerHTML = '<p class="loading-msg" style="color:#f87171">Failed to load profiles.</p>';
+      }
+    }
+
+    function render() {
+      const container = document.getElementById('bc');
+      container.innerHTML = '';
+      
+      const filterVal = document.getElementById('companyFilter').value;
+
+      let list = allProfiles;
+      if (filterVal !== 'ALL') {
+        list = allProfiles.filter(p => p.companyName === filterVal);
+      }
+
+      list.sort((a, b) => a.companyName.localeCompare(b.companyName));
+
+      if (!list.length) {
+        container.innerHTML = '<p class="loading-msg">No companies found.</p>';
+        return;
+      }
+
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'company-card' + (selectedCompanies.has(p.companyName) ? ' selected' : '');
+        
+        const stateObj = cardStatuses[p.companyName] || { status: 'idle', msg: 'Idle' };
+        let statusBadgeClass = 'status-badge';
+        let statusText = stateObj.msg;
+        if (stateObj.status === 'generating') {
+          statusBadgeClass += ' generating';
+          statusText = '<div class="spinner" style="margin-right:5px; vertical-align:middle"></div> Generating...';
+        } else if (stateObj.status === 'completed') {
+          statusBadgeClass += ' completed';
+        } else if (stateObj.status === 'failed') {
+          statusBadgeClass += ' failed';
+        } else {
+          statusBadgeClass += ' idle';
+        }
+
+        card.innerHTML = `
+          <div class="card-checkbox"></div>
+          <div class="company-name">${p.companyName}</div>
+          <div class="${statusBadgeClass}">${statusText}</div>
+        `;
+
+        card.onclick = (e) => {
+          if (stateObj.status === 'generating') return;
+          toggleSelect(p.companyName);
+        };
+
+        container.appendChild(card);
+      });
+
+      updateGenerateButton();
+    }
+
+    function toggleSelect(name) {
+      if (selectedCompanies.has(name)) {
+        selectedCompanies.delete(name);
+      } else {
+        selectedCompanies.add(name);
+      }
+      render();
+    }
+
+    function updateGenerateButton() {
+      const btn = document.getElementById('btnGenerate');
+      btn.textContent = `Generate Selected (${selectedCompanies.size})`;
+      btn.disabled = selectedCompanies.size === 0;
+    }
+
+    document.getElementById('btnSelectAll').onclick = () => {
+      const filterVal = document.getElementById('companyFilter').value;
+      const list = filterVal === 'ALL' ? allProfiles : allProfiles.filter(p => p.companyName === filterVal);
+      list.forEach(p => {
+        if (cardStatuses[p.companyName].status !== 'generating') {
+          selectedCompanies.add(p.companyName);
+        }
+      });
+      render();
+    };
+
+    document.getElementById('btnDeselectAll').onclick = () => {
+      selectedCompanies.clear();
+      render();
+    };
+
+    document.getElementById('companyFilter').onchange = () => {
+      selectedCompanies.clear();
+      render();
+    };
+
+    document.getElementById('btnGenerate').onclick = async () => {
+      const sb = document.getElementById('sb');
+      sb.className = 'status-box active';
+      sb.innerHTML = '<h3>Execution Logs</h3><hr style="margin:10px 0; border-color:rgba(255,255,255,.1)"/>';
+      
+      const toGenerate = Array.from(selectedCompanies);
+      document.querySelectorAll('.controls-bar button, .controls-bar select').forEach(el => el.disabled = true);
+
+      for (const compName of toGenerate) {
+        const profile = allProfiles.find(p => p.companyName === compName);
+        if (!profile) continue;
+
+        cardStatuses[compName] = { status: 'generating', msg: 'Generating...' };
+        render();
+
+        const logRow = document.createElement('div');
+        logRow.className = 'log-entry log-info';
+        logRow.innerHTML = `<div class="spinner"></div> Processing <strong>${compName}</strong>...`;
+        sb.appendChild(logRow);
+
+        try {
+          const res = await fetch('/awscost/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              companyName: profile.companyName,
+              environments: profile.environments,
+              profiles: profile.profiles,
+              yearMonth: document.getElementById('monthSelect').value
+            })
+          });
+          const data = await res.json();
+
+          if (data.status === 'success') {
+            cardStatuses[compName] = { status: 'completed', msg: 'Completed' };
+            logRow.className = 'log-entry log-success';
+            logRow.innerHTML = `&#10004; <strong>${compName}</strong> report generated successfully: <a class="download-link" href="/awscost/downloads/${data.fileName}" download>${data.fileName}</a>`;
+            
+            const link = document.createElement('a');
+            link.href = '/awscost/downloads/' + data.fileName;
+            link.download = data.fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            throw new Error(data.message || 'Generation failed');
+          }
+        } catch (e) {
+          cardStatuses[compName] = { status: 'failed', msg: 'Failed' };
+          logRow.className = 'log-entry log-error';
+          logRow.innerHTML = `&#10007; <strong>${compName}</strong> failed: ${e.message}`;
+        }
+        render();
+      }
+
+      document.querySelectorAll('.controls-bar button, .controls-bar select').forEach(el => el.disabled = false);
+      updateGenerateButton();
+    };
+
+    load();
+  </script>
+</body>
+</html>
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\Index2.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USTHP AWS Cost Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #fff;
+    }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 {
+      font-size: 2rem; letter-spacing: 2px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header p { color: #94a3b8; margin-top: 8px; font-size: 0.95rem; }
+    .month-picker-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(167,139,250,0.3);
+      display: inline-block;
+    }
+    .month-picker-container label { font-weight: 600; margin-right: 10px; color: #a78bfa;}
+    .month-picker-container input {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+    .buttons-container {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      max-width: 900px; width: 100%; margin-top: 20px;
+    }
+    .company-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 24px 30px; text-align: center;
+      cursor: pointer; transition: all 0.3s ease; min-width: 220px;
+      backdrop-filter: blur(10px);
+    }
+    .company-card:hover {
+      background: rgba(167,139,250,0.15); border-color: #a78bfa;
+      transform: translateY(-4px); box-shadow: 0 12px 30px rgba(167,139,250,0.3);
+    }
+    .company-card.loading { pointer-events: none; opacity: 0.6; }
+    .company-name { font-size: 1.4rem; font-weight: 700; color: #a78bfa; margin-bottom: 8px; }
+    .env-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .env-tag {
+      background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3);
+      border-radius: 20px; padding: 3px 12px; font-size: 0.75rem;
+      color: #60a5fa; font-weight: 600;
+    }
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #a78bfa;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-box {
+      margin-top: 36px; max-width: 600px; width: 100%;
+      border-radius: 12px; padding: 20px 24px; display: none; font-size: 0.95rem;
+    }
+    .status-box.success { display: block; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34d399; }
+    .status-box.error { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+    .download-btn {
+      display: inline-block; margin-top: 12px; padding: 10px 24px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa); border-radius: 8px;
+      color: #fff; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+    }
+    .download-btn:hover { opacity: 0.85; }
+    .loading-msg { color: #94a3b8; margin-top: 30px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>USTHP AWS Cost Report</h1>
+    <p>Select a company to generate the monthly cost report</p>
+    
+    <!-- NEW: Billing Month Selector -->
+    <div class="month-picker-container">
+        <label for="billingMonth">Select Billing Month:</label>
+        <input type="month" id="billingMonth" />
+    </div>
+  </div>
+
+  <div class="buttons-container" id="buttonsContainer">
+    <p class="loading-msg">Loading companies...</p>
+  </div>
+
+  <div class="status-box" id="statusBox"></div>
+
+  <script>
+    const BASE = '';
+
+    // Auto-set the dropdown to last month by default
+    document.addEventListener("DOMContentLoaded", () => {
+        const d = new Date();
+        d.setMonth(d.getMonth() - 1);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        document.getElementById('billingMonth').value = `${yyyy}-${mm}`;
+    });
+
+    async function loadProfiles() {
+      try {
+        const res = await fetch(BASE + '/awscost/api/profiles');
+        const profiles = await res.json();
+        const container = document.getElementById('buttonsContainer');
+        container.innerHTML = '';
+        if (!profiles || profiles.length === 0) {
+          container.innerHTML = '<p class="loading-msg">No companies found in credentials file.</p>';
+          return;
+        }
+        profiles.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'company-card';
+          card.id = 'card-' + p.companyName;
+          card.innerHTML = `
+            <div class="company-name">${p.companyName}</div>
+            <div class="env-tags">
+              ${p.environments.map(e => `<span class="env-tag">${e}</span>`).join('')}
+            </div>`;
+          card.addEventListener('click', () => generateReport(p, card));
+          container.appendChild(card);
+        });
+      } catch (e) {
+        document.getElementById('buttonsContainer').innerHTML =
+          '<p class="loading-msg" style="color:#f87171">Failed to load profiles. Is the server running?</p>';
+      }
+    }
+
+    async function generateReport(profile, card) {
+      const statusBox = document.getElementById('statusBox');
+      const selectedMonth = document.getElementById('billingMonth').value; // e.g. "2026-04"
+      
+      card.classList.add('loading');
+      card.innerHTML += '<div class="spinner"></div>';
+      statusBox.className = 'status-box';
+      statusBox.innerHTML = '';
+
+      // Create payload to send to Java backend
+      const payload = {
+        companyName: profile.companyName,
+        environments: profile.environments,
+        profiles: profile.profiles,
+        yearMonth: selectedMonth // <--- THIS FIXES THE BUG!
+      };
+
+      try {
+        const res = await fetch(BASE + '/awscost/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          statusBox.className = 'status-box success';
+          statusBox.innerHTML = `
+            <strong>&#10003; Report Generated!</strong><br/>
+            File: <strong>${data.fileName}</strong><br/>
+            <a class="download-btn" href="${BASE}/awscost/downloads/${data.fileName}">
+              &#8595; Download Excel
+            </a>`;
+        } else {
+          throw new Error(data.message || 'Generation failed');
+        }
+      } catch (e) {
+        statusBox.className = 'status-box error';
+        statusBox.innerHTML = '<strong>&#10007; Error:</strong> ' + e.message;
+      } finally {
+        await loadProfiles(); 
+      }
+    }
+
+    loadProfiles();
+  </script>
+</body>
+</html>
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\main\resources\static\index3.html ===
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-app</title>
+    <script type="module" crossorigin src="/awscost/assets/index-BULUM_z_.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\src\test\java\com\healthproof\intplus\awscost\AwsCostApplicationTests.java ===
+package com.healthproof.intplus.awscost;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AwsCostApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\target\classes\static\index.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>USTHP AWS Cost Report</title>
+  <style>
+    :root {
+      --primary: #a78bfa;
+      --secondary: #60a5fa;
+      --bg-gradient: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+      --card-bg: rgba(255,255,255,.05);
+      --card-border: rgba(255,255,255,.1);
+      --card-hover-bg: rgba(167,139,250,.1);
+      --card-selected-bg: rgba(167,139,250,.2);
+      --card-selected-border: #a78bfa;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",sans-serif;background:var(--bg-gradient);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px;color:#fff}
+    .header{text-align:center;margin-bottom:30px}
+    .header h1{font-size:2.5rem;letter-spacing:2px;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header p{color:#94a3b8;margin-top:8px}
+    
+    .controls-bar{display:flex;flex-wrap:wrap;gap:15px;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid var(--card-border);backdrop-filter:blur(10px);padding:15px 25px;border-radius:16px;margin-bottom:30px;width:100%;max-width:900px}
+    select{background:rgba(255,255,255,.07);border:1px solid var(--card-border);border-radius:8px;color:#fff;padding:10px 16px;font-size:.95rem;outline:none;cursor:pointer;transition:all .3s}
+    select:hover{background:rgba(255,255,255,.12);border-color:var(--primary)}
+    option{background:#1e1b4b;color:#fff}
+    
+    .btn{padding:10px 20px;border-radius:8px;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s;border:1px solid transparent}
+    .btn-secondary{background:rgba(255,255,255,.05);border-color:var(--card-border);color:#e5e7eb}
+    .btn-secondary:hover{background:rgba(255,255,255,.1);border-color:#9ca3af}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 4px 14px rgba(167,139,250,.3)}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(167,139,250,.45)}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+    
+    .buttons-container{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;max-width:900px;width:100%;margin-bottom:30px}
+    .company-card{position:relative;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:35px 25px;text-align:center;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);min-width:200px;backdrop-filter:blur(10px);user-select:none}
+    .company-card:hover{background:var(--card-hover-bg);border-color:rgba(167,139,250,.4);transform:translateY(-4px)}
+    .company-card.selected{background:var(--card-selected-bg);border-color:var(--card-selected-border);box-shadow:0 0 20px rgba(167,139,250,.25)}
+    
+    .card-checkbox{position:absolute;top:15px;right:15px;width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;transition:all .2s;background:rgba(0,0,0,.2)}
+    .company-card.selected .card-checkbox{background:var(--primary);border-color:var(--primary)}
+    .card-checkbox::after{content:'';width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);display:none;margin-bottom:2px}
+    .company-card.selected .card-checkbox::after{display:block}
+    
+    .company-name{font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:10px}
+    .company-card.selected .company-name{color:#a78bfa}
+    
+    .status-badge{font-size:.8rem;padding:4px 12px;border-radius:12px;display:inline-block;font-weight:600;background:rgba(255,255,255,.05);color:#9ca3af;margin-top:10px}
+    .status-badge.idle{display:none}
+    .status-badge.generating{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+    .status-badge.completed{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+    .status-badge.failed{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+    
+    .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    .status-box{margin-top:20px;max-width:900px;width:100%;border-radius:12px;padding:20px 24px;display:none}
+    .status-box.active{display:block;background:rgba(255,255,255,.03);border:1px solid var(--card-border)}
+    .log-entry{margin-bottom:8px;font-family:monospace;font-size:.9rem;display:flex;align-items:center;gap:10px}
+    .log-success{color:#34d399}
+    .log-error{color:#f87171}
+    .log-info{color:#60a5fa}
+    .download-link{color:#60a5fa;text-decoration:underline;cursor:pointer}
+    .loading-msg{color:#94a3b8;margin-top:30px;font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div class="header"><h1>USTHP AWS Cost Report</h1><p>Select companies to generate and download monthly cost reports</p></div>
+  
+  <div class="controls-bar">
+    <select id="companyFilter"><option value="ALL">All Accounts</option></select>
+    <select id="monthSelect"></select>
+    <button class="btn btn-secondary" id="btnSelectAll">Select All</button>
+    <button class="btn btn-secondary" id="btnDeselectAll">Clear</button>
+    <button class="btn btn-primary" id="btnGenerate" disabled>Generate Selected (0)</button>
+  </div>
+
+  <div class="buttons-container" id="bc"><p class="loading-msg">Loading companies...</p></div>
+  <div class="status-box" id="sb"></div>
+
+  <script>
+    let allProfiles = [];
+    let selectedCompanies = new Set();
+    let cardStatuses = {};
+
+    function populateMonths() {
+      const monthSelect = document.getElementById('monthSelect');
+      monthSelect.innerHTML = '';
+      
+      const defOpt = document.createElement('option');
+      defOpt.value = 'DEFAULT';
+      defOpt.textContent = 'Default (Previous Month)';
+      defOpt.selected = true;
+      monthSelect.appendChild(defOpt);
+
+      const now = new Date();
+      for (let i = 1; i <= 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const opt = document.createElement('option');
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        opt.value = `${year}-${month}`;
+        const monthName = d.toLocaleString('default', { month: 'long' });
+        opt.textContent = `${monthName} ${year}`;
+        monthSelect.appendChild(opt);
+      }
+    }
+
+    async function load() {
+      try {
+        populateMonths();
+        const res = await fetch('/awscost/api/profiles');
+        allProfiles = await res.json();
+        
+        const filterSelect = document.getElementById('companyFilter');
+        filterSelect.innerHTML = '<option value="ALL">All Accounts</option>';
+        allProfiles.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.companyName;
+          opt.textContent = p.companyName;
+          filterSelect.appendChild(opt);
+        });
+
+        allProfiles.forEach(p => {
+          if (!cardStatuses[p.companyName]) {
+            cardStatuses[p.companyName] = { status: 'idle', msg: 'Idle' };
+          }
+        });
+
+        render();
+      } catch (e) {
+        document.getElementById('bc').innerHTML = '<p class="loading-msg" style="color:#f87171">Failed to load profiles.</p>';
+      }
+    }
+
+    function render() {
+      const container = document.getElementById('bc');
+      container.innerHTML = '';
+      
+      const filterVal = document.getElementById('companyFilter').value;
+
+      let list = allProfiles;
+      if (filterVal !== 'ALL') {
+        list = allProfiles.filter(p => p.companyName === filterVal);
+      }
+
+      list.sort((a, b) => a.companyName.localeCompare(b.companyName));
+
+      if (!list.length) {
+        container.innerHTML = '<p class="loading-msg">No companies found.</p>';
+        return;
+      }
+
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'company-card' + (selectedCompanies.has(p.companyName) ? ' selected' : '');
+        
+        const stateObj = cardStatuses[p.companyName] || { status: 'idle', msg: 'Idle' };
+        let statusBadgeClass = 'status-badge';
+        let statusText = stateObj.msg;
+        if (stateObj.status === 'generating') {
+          statusBadgeClass += ' generating';
+          statusText = '<div class="spinner" style="margin-right:5px; vertical-align:middle"></div> Generating...';
+        } else if (stateObj.status === 'completed') {
+          statusBadgeClass += ' completed';
+        } else if (stateObj.status === 'failed') {
+          statusBadgeClass += ' failed';
+        } else {
+          statusBadgeClass += ' idle';
+        }
+
+        card.innerHTML = `
+          <div class="card-checkbox"></div>
+          <div class="company-name">${p.companyName}</div>
+          <div class="${statusBadgeClass}">${statusText}</div>
+        `;
+
+        card.onclick = (e) => {
+          if (stateObj.status === 'generating') return;
+          toggleSelect(p.companyName);
+        };
+
+        container.appendChild(card);
+      });
+
+      updateGenerateButton();
+    }
+
+    function toggleSelect(name) {
+      if (selectedCompanies.has(name)) {
+        selectedCompanies.delete(name);
+      } else {
+        selectedCompanies.add(name);
+      }
+      render();
+    }
+
+    function updateGenerateButton() {
+      const btn = document.getElementById('btnGenerate');
+      btn.textContent = `Generate Selected (${selectedCompanies.size})`;
+      btn.disabled = selectedCompanies.size === 0;
+    }
+
+    document.getElementById('btnSelectAll').onclick = () => {
+      const filterVal = document.getElementById('companyFilter').value;
+      const list = filterVal === 'ALL' ? allProfiles : allProfiles.filter(p => p.companyName === filterVal);
+      list.forEach(p => {
+        if (cardStatuses[p.companyName].status !== 'generating') {
+          selectedCompanies.add(p.companyName);
+        }
+      });
+      render();
+    };
+
+    document.getElementById('btnDeselectAll').onclick = () => {
+      selectedCompanies.clear();
+      render();
+    };
+
+    document.getElementById('companyFilter').onchange = () => {
+      selectedCompanies.clear();
+      render();
+    };
+
+    document.getElementById('btnGenerate').onclick = async () => {
+      const sb = document.getElementById('sb');
+      sb.className = 'status-box active';
+      sb.innerHTML = '<h3>Execution Logs</h3><hr style="margin:10px 0; border-color:rgba(255,255,255,.1)"/>';
+      
+      const toGenerate = Array.from(selectedCompanies);
+      document.querySelectorAll('.controls-bar button, .controls-bar select').forEach(el => el.disabled = true);
+
+      for (const compName of toGenerate) {
+        const profile = allProfiles.find(p => p.companyName === compName);
+        if (!profile) continue;
+
+        cardStatuses[compName] = { status: 'generating', msg: 'Generating...' };
+        render();
+
+        const logRow = document.createElement('div');
+        logRow.className = 'log-entry log-info';
+        logRow.innerHTML = `<div class="spinner"></div> Processing <strong>${compName}</strong>...`;
+        sb.appendChild(logRow);
+
+        try {
+          const res = await fetch('/awscost/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              companyName: profile.companyName,
+              environments: profile.environments,
+              profiles: profile.profiles,
+              yearMonth: document.getElementById('monthSelect').value
+            })
+          });
+          const data = await res.json();
+
+          if (data.status === 'success') {
+            cardStatuses[compName] = { status: 'completed', msg: 'Completed' };
+            logRow.className = 'log-entry log-success';
+            logRow.innerHTML = `&#10004; <strong>${compName}</strong> report generated successfully: <a class="download-link" href="/awscost/downloads/${data.fileName}" download>${data.fileName}</a>`;
+            
+            const link = document.createElement('a');
+            link.href = '/awscost/downloads/' + data.fileName;
+            link.download = data.fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            throw new Error(data.message || 'Generation failed');
+          }
+        } catch (e) {
+          cardStatuses[compName] = { status: 'failed', msg: 'Failed' };
+          logRow.className = 'log-entry log-error';
+          logRow.innerHTML = `&#10007; <strong>${compName}</strong> failed: ${e.message}`;
+        }
+        render();
+      }
+
+      document.querySelectorAll('.controls-bar button, .controls-bar select').forEach(el => el.disabled = false);
+      updateGenerateButton();
+    };
+
+    load();
+  </script>
+</body>
+</html>
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\target\classes\static\Index2.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USTHP AWS Cost Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #fff;
+    }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 {
+      font-size: 2rem; letter-spacing: 2px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header p { color: #94a3b8; margin-top: 8px; font-size: 0.95rem; }
+    .month-picker-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(167,139,250,0.3);
+      display: inline-block;
+    }
+    .month-picker-container label { font-weight: 600; margin-right: 10px; color: #a78bfa;}
+    .month-picker-container input {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+    .buttons-container {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      max-width: 900px; width: 100%; margin-top: 20px;
+    }
+    .company-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 24px 30px; text-align: center;
+      cursor: pointer; transition: all 0.3s ease; min-width: 220px;
+      backdrop-filter: blur(10px);
+    }
+    .company-card:hover {
+      background: rgba(167,139,250,0.15); border-color: #a78bfa;
+      transform: translateY(-4px); box-shadow: 0 12px 30px rgba(167,139,250,0.3);
+    }
+    .company-card.loading { pointer-events: none; opacity: 0.6; }
+    .company-name { font-size: 1.4rem; font-weight: 700; color: #a78bfa; margin-bottom: 8px; }
+    .env-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .env-tag {
+      background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3);
+      border-radius: 20px; padding: 3px 12px; font-size: 0.75rem;
+      color: #60a5fa; font-weight: 600;
+    }
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #a78bfa;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-box {
+      margin-top: 36px; max-width: 600px; width: 100%;
+      border-radius: 12px; padding: 20px 24px; display: none; font-size: 0.95rem;
+    }
+    .status-box.success { display: block; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34d399; }
+    .status-box.error { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+    .download-btn {
+      display: inline-block; margin-top: 12px; padding: 10px 24px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa); border-radius: 8px;
+      color: #fff; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+    }
+    .download-btn:hover { opacity: 0.85; }
+    .loading-msg { color: #94a3b8; margin-top: 30px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>USTHP AWS Cost Report</h1>
+    <p>Select a company to generate the monthly cost report</p>
+    
+    <!-- NEW: Billing Month Selector -->
+    <div class="month-picker-container">
+        <label for="billingMonth">Select Billing Month:</label>
+        <input type="month" id="billingMonth" />
+    </div>
+  </div>
+
+  <div class="buttons-container" id="buttonsContainer">
+    <p class="loading-msg">Loading companies...</p>
+  </div>
+
+  <div class="status-box" id="statusBox"></div>
+
+  <script>
+    const BASE = '';
+
+    // Auto-set the dropdown to last month by default
+    document.addEventListener("DOMContentLoaded", () => {
+        const d = new Date();
+        d.setMonth(d.getMonth() - 1);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        document.getElementById('billingMonth').value = `${yyyy}-${mm}`;
+    });
+
+    async function loadProfiles() {
+      try {
+        const res = await fetch(BASE + '/awscost/api/profiles');
+        const profiles = await res.json();
+        const container = document.getElementById('buttonsContainer');
+        container.innerHTML = '';
+        if (!profiles || profiles.length === 0) {
+          container.innerHTML = '<p class="loading-msg">No companies found in credentials file.</p>';
+          return;
+        }
+        profiles.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'company-card';
+          card.id = 'card-' + p.companyName;
+          card.innerHTML = `
+            <div class="company-name">${p.companyName}</div>
+            <div class="env-tags">
+              ${p.environments.map(e => `<span class="env-tag">${e}</span>`).join('')}
+            </div>`;
+          card.addEventListener('click', () => generateReport(p, card));
+          container.appendChild(card);
+        });
+      } catch (e) {
+        document.getElementById('buttonsContainer').innerHTML =
+          '<p class="loading-msg" style="color:#f87171">Failed to load profiles. Is the server running?</p>';
+      }
+    }
+
+    async function generateReport(profile, card) {
+      const statusBox = document.getElementById('statusBox');
+      const selectedMonth = document.getElementById('billingMonth').value; // e.g. "2026-04"
+      
+      card.classList.add('loading');
+      card.innerHTML += '<div class="spinner"></div>';
+      statusBox.className = 'status-box';
+      statusBox.innerHTML = '';
+
+      // Create payload to send to Java backend
+      const payload = {
+        companyName: profile.companyName,
+        environments: profile.environments,
+        profiles: profile.profiles,
+        yearMonth: selectedMonth // <--- THIS FIXES THE BUG!
+      };
+
+      try {
+        const res = await fetch(BASE + '/awscost/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          statusBox.className = 'status-box success';
+          statusBox.innerHTML = `
+            <strong>&#10003; Report Generated!</strong><br/>
+            File: <strong>${data.fileName}</strong><br/>
+            <a class="download-btn" href="${BASE}/awscost/downloads/${data.fileName}">
+              &#8595; Download Excel
+            </a>`;
+        } else {
+          throw new Error(data.message || 'Generation failed');
+        }
+      } catch (e) {
+        statusBox.className = 'status-box error';
+        statusBox.innerHTML = '<strong>&#10007; Error:</strong> ' + e.message;
+      } finally {
+        await loadProfiles(); 
+      }
+    }
+
+    loadProfiles();
+  </script>
+</body>
+</html>
+
+
+=== FILE: C:\Users\143500\Desktop\awscost\awscost\target\classes\static\index3.html ===
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-app</title>
+    <script type="module" crossorigin src="/awscost/assets/index-BULUM_z_.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
