@@ -1,5 +1,8 @@
-Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|node_modules|venv|dist|build)\\' } | ForEach-Object {
-    "--- FILE: $($_.FullName) ---"
+"--- FILE STRUCTURE ---" | Out-File java_html_export.txt -Encoding utf8
+Get-ChildItem -Recurse -Include *.java, *.html | Select-Object -ExpandProperty FullName | Out-File java_html_export.txt -Append -Encoding utf8
+
+"`n--- FILE CONTENTS ---" | Out-File java_html_export.txt -Append -Encoding utf8
+Get-ChildItem -Recurse -Include *.java, *.html | ForEach-Object {
+    "`n=== FILE: $($_.FullName) ==="
     Get-Content $_.FullName -Raw
-    "`n"
-} | Out-File -FilePath project_code.txt -Encoding utf8
+} | Out-File java_html_export.txt -Append -Encoding utf8
