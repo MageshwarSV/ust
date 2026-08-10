@@ -1,37 +1,475 @@
-$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java"
-$utf8NoBom = New-Object System.Text.UTF8Encoding $false
-
-Get-ChildItem -Path $baseDir -Recurse -Filter "*.java" | ForEach-Object {
-    $text = [System.IO.File]::ReadAllText($_.FullName)
-    
-    # Fix truncated 'ackage' -> 'package'
-    if ($text.StartsWith("ackage ")) {
-        $text = "p" + $text
-    }
-    
-    # Strip BOM if present and fix 'ackage'
-    if ($text.StartsWith([char]0xFEFF)) {
-        $text = $text.Substring(1)
-        if ($text.StartsWith("ackage ")) {
-            $text = "p" + $text
-        }
-    }
-    
-    [System.IO.File]::WriteAllText($_.FullName, $text, $utf8NoBom)
-}
-
-Write-Host "All 'ackage' lines fixed to 'package'!" -ForegroundColor Green
-
-# Run javac compilation test
-$javac = (Get-Command javac -ErrorAction SilentlyContinue).Source
-if (-not $javac) {
-    $javac = (Get-ChildItem "C:\Program Files\Java", "C:\Program Files (x86)\Java", "$env:USERPROFILE\.jdks" -Recurse -Filter "javac.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
-}
-
-if ($javac) {
-    Write-Host "Running compilation check..." -ForegroundColor Yellow
-    $targetDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\target\classes"
-    if (-not (Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir -Force | Out-Null }
-    $javaFiles = Get-ChildItem "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java" -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName
-    & $javac -d $targetDir $javaFiles 2>&1
-}
+Running compilation check...
+javac.exe : C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java:3: 
+error: package org.springframework.boot does not exist
+At line:6 char:5
++     & $javac -d $targetDir $javaFiles 2>&1
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\143500... does not exist:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+import org.springframework.boot.SpringApplication;
+                               ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java:4: error: 
+package org.springframework.boot.autoconfigure does not exist
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+                                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java:5: error: 
+package org.springframework.context.annotation does not exist
+import org.springframework.context.annotation.ComponentScan;
+                                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java:7: error: 
+cannot find symbol
+@SpringBootApplication
+ ^
+  symbol: class SpringBootApplication
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\AwsCostApplication.java:8: error: 
+cannot find symbol
+@ComponentScan(basePackages = {"com.healthproof.intplus.awscost"})
+ ^
+  symbol: class ComponentScan
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\CredentialsReader.java:2: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\CredentialsReader.java:5: error: cannot 
+find symbol
+@Service
+ ^
+  symbol: class Service
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\Model.java:3: error: package 
+org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\Model.java:4: error: package 
+org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:4: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:5: error: 
+package software.amazon.awssdk.auth.credentials does not exist
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+                                              ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:6: error: 
+package software.amazon.awssdk.http does not exist
+import software.amazon.awssdk.http.SdkHttpConfigurationOption;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:7: error: 
+package software.amazon.awssdk.http.apache does not exist
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+                                         ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:8: error: 
+package software.amazon.awssdk.services.costexplorer does not exist
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:10: error: 
+package software.amazon.awssdk.thirdparty.jackson.core does not exist
+import software.amazon.awssdk.thirdparty.jackson.core.JsonProcessingException;
+                                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:11: error: 
+package software.amazon.awssdk.utils does not exist
+import software.amazon.awssdk.utils.AttributeMap;
+                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:18: error: 
+cannot find symbol
+@Service
+ ^
+  symbol: class Service
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:20: error: 
+cannot find symbol
+    private CostExplorerClient caClient;
+            ^
+  symbol:   class CostExplorerClient
+  location: class CostExplorerDev
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:36: error: 
+cannot find symbol
+    private void init(String profileName) throws JsonProcessingException {
+                                                 ^
+  symbol:   class JsonProcessingException
+  location: class CostExplorerDev
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:55: error: 
+cannot find symbol
+    public void getR12Values() throws JsonProcessingException {
+                                      ^
+  symbol:   class JsonProcessingException
+  location: class CostExplorerDev
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:105: error: 
+cannot find symbol
+    private void recordRawResponse(String queryName, GetCostAndUsageResponse response) {
+                                                     ^
+  symbol:   class GetCostAndUsageResponse
+  location: class CostExplorerDev
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\awsDev\CostExplorerDev.java:9: error: 
+package software.amazon.awssdk.services.costexplorer.model does not exist
+import software.amazon.awssdk.services.costexplorer.model.*;
+^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:6: 
+error: package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Autowired;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:7: 
+error: package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Value;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:15: 
+error: cannot find symbol
+@RestController
+ ^
+  symbol: class RestController
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java:2: 
+error: package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Autowired;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java:3: 
+error: package org.springframework.context does not exist
+import org.springframework.context.ApplicationContext;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java:4: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java:5: 
+error: cannot find symbol
+@Service
+ ^
+  symbol: class Service
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:72: 
+error: cannot find symbol
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) throws IOException {
+           ^
+  symbol:   class ResponseEntity
+  location: class CostContorller
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:85: 
+error: cannot find symbol
+    public ResponseEntity<byte[]> downloadFilePost(@RequestBody DownloadRequest req) throws IOException {
+           ^
+  symbol:   class ResponseEntity
+  location: class CostContorller
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessorFactory.java:8: 
+error: cannot find symbol
+    private ApplicationContext context;
+            ^
+  symbol:   class ApplicationContext
+  location: class ExcelProcessorFactory
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:5: error: 
+package org.apache.poi.ss.util does not exist
+import org.apache.poi.ss.util.CellReference;
+                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:6: error: 
+package org.apache.poi.xssf.usermodel does not exist
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+                                    ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:7: error: 
+package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Value;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:19: 
+error: cannot find symbol
+    protected Workbook workbook; protected Sheet sheet; protected String fileName;
+              ^
+  symbol:   class Workbook
+  location: class BaseExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:19: 
+error: cannot find symbol
+    protected Workbook workbook; protected Sheet sheet; protected String fileName;
+                                           ^
+  symbol:   class Sheet
+  location: class BaseExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:163: 
+error: cannot find symbol
+    protected Cell getCell(String ref) {
+              ^
+  symbol:   class Cell
+  location: class BaseExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:8: 
+error: package org.springframework.http does not exist
+import org.springframework.http.*;
+^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:9: 
+error: package org.springframework.web.bind.annotation does not exist
+import org.springframework.web.bind.annotation.*;
+^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BaseExcelProcessor.java:4: error: 
+package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.*;
+^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:5: 
+error: package org.apache.poi.ss.util does not exist
+import org.apache.poi.ss.util.CellReference;
+                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:6: 
+error: package org.apache.poi.xssf.usermodel does not exist
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+                                    ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:7: 
+error: package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Value;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:8: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:14: 
+error: cannot find symbol
+@Service
+ ^
+  symbol: class Service
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:21: 
+error: cannot find symbol
+    private Workbook workbook; private String fileName; private Sheet sheet;
+            ^
+  symbol:   class Workbook
+  location: class AdvancedExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:21: 
+error: cannot find symbol
+    private Workbook workbook; private String fileName; private Sheet sheet;
+                                                                ^
+  symbol:   class Sheet
+  location: class AdvancedExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AdvancedExcelProcessor.java:4: 
+error: package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.*;
+^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AmeribenExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\AmeribenExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("ameribenExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BcbsksExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\BcbsksExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("bcbsksExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\CloverExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\CloverExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("cloverExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\DefaultExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\DefaultExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("defaultExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("emergientExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:6: error: 
+package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.Cell;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:7: error: 
+package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.Row;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:8: error: 
+package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.Sheet;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:9: error: 
+package org.apache.poi.ss.usermodel does not exist
+import org.apache.poi.ss.usermodel.Workbook;
+                                  ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:10: error: 
+package org.apache.poi.ss.util does not exist
+import org.apache.poi.ss.util.CellReference;
+                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:11: error: 
+package org.apache.poi.xssf.usermodel does not exist
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+                                    ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:12: error: 
+package org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Value;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:13: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Service;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:23: error: 
+cannot find symbol
+@Service
+ ^
+  symbol: class Service
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:42: error: 
+cannot find symbol
+    private Workbook workbook;
+            ^
+  symbol:   class Workbook
+  location: class ExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:46: error: 
+cannot find symbol
+    private Sheet sheet;
+            ^
+  symbol:   class Sheet
+  location: class ExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:282: error: 
+cannot find symbol
+    private void setCellValue(double value, CellReference cellRef, Sheet sheet)
+                                            ^
+  symbol:   class CellReference
+  location: class ExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ExcelProcessor.java:282: error: 
+cannot find symbol
+    private void setCellValue(double value, CellReference cellRef, Sheet sheet)
+                                                                   ^
+  symbol:   class Sheet
+  location: class ExcelProcessor
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\GhcExcelProcessor.java:3: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\GhcExcelProcessor.java:5: error: 
+cannot find symbol
+@Component("ghcExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IbxExcelProcessor.java:3: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IbxExcelProcessor.java:5: error: 
+cannot find symbol
+@Component("ibxExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IuhpExcelProcessor.java:3: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\IuhpExcelProcessor.java:6: error: 
+cannot find symbol
+@Component("iuhpExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\MedstarExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\MedstarExcelProcessor.java:6: 
+error: cannot find symbol
+@Component("medstarExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\PhcExcelProcessor.java:3: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\PhcExcelProcessor.java:5: error: 
+cannot find symbol
+@Component("phcExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\QualityExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\QualityExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("qualityExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\WyoblueExcelProcessor.java:3: 
+error: package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\WyoblueExcelProcessor.java:5: 
+error: cannot find symbol
+@Component("wyoblueExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ZingExcelProcessor.java:3: error: 
+package org.springframework.stereotype does not exist
+import org.springframework.stereotype.Component;
+                                     ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\ZingExcelProcessor.java:5: error: 
+cannot find symbol
+@Component("zingExcelProcessor")
+ ^
+  symbol: class Component
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:3: error: package 
+org.springframework.beans.factory.annotation does not exist
+import org.springframework.beans.factory.annotation.Value;
+                                                   ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:4: error: package 
+org.springframework.context.annotation does not exist
+import org.springframework.context.annotation.Bean;
+                                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:5: error: package 
+org.springframework.context.annotation does not exist
+import org.springframework.context.annotation.Configuration;
+                                             ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:6: error: package 
+software.amazon.awssdk.auth.credentials does not exist
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+                                              ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:7: error: package 
+software.amazon.awssdk.auth.credentials does not exist
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+                                              ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:8: error: package 
+software.amazon.awssdk.auth.credentials does not exist
+import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
+                                              ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:9: error: package 
+software.amazon.awssdk.auth.credentials does not exist
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+                                              ^
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\util\AWSConfig.java:14: error: cannot 
+find symbol
+    public AwsCredentialsProvider awsCredentialsProvider(
+           ^
+  symbol:   class AwsCredentialsProvider
+  location: class AWSConfig
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:17: 
+error: cannot find symbol
+    @Autowired private ExcelProcessorFactory processorFactory;
+     ^
+  symbol:   class Autowired
+  location: class CostContorller
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:18: 
+error: cannot find symbol
+    @Autowired private CostExplorerDev costExplorerDev;
+     ^
+  symbol:   class Autowired
+  location: class CostContorller
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:19: 
+error: cannot find symbol
+    @Autowired private CredentialsReader credentialsReader;
+     ^
+  symbol:   class Autowired
+  location: class CostContorller
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\contorller\CostContorller.java:20: 
+error: cannot find symbol
+    @Value("${excel.output.file.path}") private String outFilePath;
+     ^
+  symbol:   class Value
+  location: class CostContorller
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+100 errors
+only showing the first 100 errors, of 264 total; use -Xmaxerrs if you would like to see more
+PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost
