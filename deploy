@@ -1,29 +1,18 @@
-PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; mvn clean compile 2>&1                                                                                                                                    
-mvn : The term 'mvn' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, 
-or if a path was included, verify that the path is correct and try again.
-At line:1 char:73
-+ ... C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; mvn clean c ...
-+                                                               ~~~
-    + CategoryInfo          : ObjectNotFound: (mvn:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
- 
+Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"
 
-Suggestion [3,General]: The command mvn was not found, but does exist in the current location. Windows PowerShell does not load commands from the current location by default. If you trust this command, instead type: ".\mvn". See "get-help about_Command_Precedence" for more details.
-PS C:\Users\143500\Desktop\awscost\awscost_feature\awscost> Set-Location "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"; .\mvnw clean compile 2>&1                                                                                                                                 
-.\mvnw : Get-Content : Cannot find path 'C:\Users\143500\Desktop\awscost\awscost_feature\awscost\.mvn\wrapper\maven-wrapper.properties' 
-because it 
-At line:1 char:73
-+ ... 0\Desktop\awscost\awscost_feature\awscost"; .\mvnw clean compile 2>&1
-+                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Get-Content : C...es' because it :String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-does not exist.
-At line:54 char:21
-+ ... utionUrl = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.p ...
-+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : ObjectNotFound: (C:\Users\143500...pper.properties:String) [Get-Content], ItemNotFoundException
-    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
- 
-Cannot start maven from wrapper  
-PS C:\Users\143500\Desktop\awscost\aws
+# Find javac compiler on your system
+$javac = (Get-Command javac -ErrorAction SilentlyContinue).Source
+if (-not $javac) {
+    $javac = (Get-ChildItem "C:\Program Files\Java", "C:\Program Files (x86)\Java", "$env:USERPROFILE\.jdks" -Recurse -Filter "javac.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+}
+
+if ($javac) {
+    Write-Host "Using Java Compiler: $javac" -ForegroundColor Green
+    $targetDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\target\classes"
+    if (-not (Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir -Force | Out-Null }
+    
+    $javaFiles = Get-ChildItem "src\main\java" -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName
+    & $javac -d $targetDir $javaFiles 2>&1
+} else {
+    Write-Host "Java compiler (javac) is managed by IntelliJ. Please click Build -> Rebuild Project in IntelliJ!" -ForegroundColor Yellow
+}
