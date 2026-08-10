@@ -1,39 +1,10 @@
-$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
-
-# Part 1: Update CostExplorerDev.java
-$costExplorerPath = "$baseDir\awsDev\CostExplorerDev.java"
-$ceContent = Get-Content $costExplorerPath -Raw
-$oldCalc = 'private void calculateCommonService\(\) \{[\s\S]*?model\.getModelMapR14\(\)\.put\(ExcelMapper\.W12, String\.valueOf\(ec2\)\);[\s\S]*?\}'
-$newCalc = @"
-private void calculateCommonService() {
-        Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);
-        Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);
-        Object y12Obj = model.getModelMapR14().get(ExcelMapper.Y12);
-        Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service");
-
-        double common = new BigDecimal(commonObj != null ? commonObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double total = new BigDecimal(totalObj != null ? totalObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double cloudwatch = new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-        double rds = new BigDecimal(rdsObj != null ? rdsObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-        double ec2 = total - cloudwatch - rds + common;
-        model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));
-    }
-"@
-$ceContent = [regex]::Replace($ceContent, $oldCalc, $newCalc)
-Set-Content -Path $costExplorerPath -Value $ceContent -Encoding utf8
-
-# Part 2: Update Excel Processors using direct String Replace
-$processors = Get-ChildItem "$baseDir\excel\*ExcelProcessor.java"
-foreach ($p in $processors) {
-    $code = Get-Content $p.FullName -Raw
-    if (-not $code.Contains("Z12")) {
-        $code = $code.Replace('setNum("V12",bd(val(m,ExcelMapper.V12)));', 'setNum("V12",bd(val(m,ExcelMapper.V12))); setNum("Z12",bd(val(m,"Product$EM")));')
-    }
-    if (-not $code.Contains("Z13")) {
-        $code = $code.Replace('setNum("Y13",bd(val(m,ExcelMapper.Y13)));', 'setNum("Y13",bd(val(m,ExcelMapper.Y13))); setNum("Z13",bd(val(m,"Product$EM")));')
-    }
-    Set-Content -Path $p.FullName -Value $code -Encoding utf8
-}
-
-Write-Host "All SOP updates successfully applied with ZERO errors!" -ForegroundColor Green
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
+java: illegal character: '\ufeff'
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
+java: class, interface, enum, or record expected
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:2
+java: class, interface, enum, or record expected
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:3
+java: class, interface, enum, or record expected
+C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java:4
+java: class, interface, enum, or record expected
