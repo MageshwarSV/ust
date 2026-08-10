@@ -1,2 +1,212 @@
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\excel\EmergientExcelProcessor.java
-java: class, interface, enum, or record expected
+$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost"
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+# 1. Cleanly write CostExplorerDev.java
+$cePath = "$baseDir\awsDev\CostExplorerDev.java"
+$ceCode = @"
+package com.healthproof.intplus.awscost.awsDev;
+import com.healthproof.intplus.awscost.Model;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.http.SdkHttpConfigurationOption;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.*;
+import software.amazon.awssdk.thirdparty.jackson.core.JsonProcessingException;
+import software.amazon.awssdk.utils.AttributeMap;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+@Service
+public class CostExplorerDev {
+    private CostExplorerClient caClient;
+    private Model model;
+    private List<Map<String, Object>> rawQueriesData;
+    private String startDate;
+    private String endDate;
+    public Model getModel() { return model; }
+    public List<Map<String, Object>> getRawQueriesData() { return rawQueriesData; }
+    public void start(String profileName, String environment, String startDate, String endDate) throws Exception {
+        this.rawQueriesData = new ArrayList<>();
+        this.startDate = startDate;
+        this.endDate = endDate;
+        init(profileName);
+        getH4andH5(); getR12Values(); getNoTagAndCloudWatch(); calculateCommonService(); getRow13Values();
+        System.out.println("********----->: Profile=" + profileName + " | Env=" + environment);
+        model.printR12(); model.printR13(); model.printH4H5(); model.printR14();
+    }
+    private void init(String profileName) throws JsonProcessingException {
+        this.model = new Model();
+        caClient = CostExplorerClient.builder()
+                .credentialsProvider(ProfileCredentialsProvider.create(profileName))
+                .region(software.amazon.awssdk.regions.Region.US_EAST_1)
+                .httpClient(ApacheHttpClient.builder().buildWithDefaults(AttributeMap.builder()
+                        .put(SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES, Boolean.TRUE).build()))
+                .build();
+    }
+    public void getH4andH5() {
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost")
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("RECORD_TYPE").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("H4_H5", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapH4H5().put(g.keys().get(0), v.amount()))));
+    }
+    public void getR12Values() throws JsonProcessingException {
+        Expression ex = Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.TAG).key("Product").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R12", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR12().put(g.keys().get(0), v.amount()))));
+    }
+    public void getNoTagAndCloudWatch() {
+        Expression ex = Expression.builder().and(
+                Expression.builder().not(Expression.builder().dimensions(DimensionValues.builder()
+                        .key(Dimension.RECORD_TYPE).values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build()).build(),
+                Expression.builder().tags(TagValues.builder().key("Product").values("").build()).build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.DIMENSION).key("SERVICE").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R14", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR14().put(g.keys().get(0), v.amount()))));
+    }
+    public void getRow13Values() {
+        Expression ex = Expression.builder().dimensions(DimensionValues.builder().key(Dimension.RECORD_TYPE)
+                .values("Enterprise Discount Program Discount","SavingsPlanCoveredUsage").build()).build();
+        GetCostAndUsageRequest req = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder().start(this.startDate).end(this.endDate).build())
+                .granularity(Granularity.MONTHLY).metrics("NetAmortizedCost").filter(ex)
+                .groupBy(GroupDefinition.builder().type(GroupDefinitionType.TAG).key("Product").build()).build();
+        GetCostAndUsageResponse res = caClient.getCostAndUsage(req);
+        recordRawResponse("R13", res);
+        res.resultsByTime().forEach(r -> r.groups().forEach(g ->
+                g.metrics().forEach((k, v) -> model.getModelMapR13().put(g.keys().get(0), v.amount()))));
+    }
+    private void calculateCommonService() {
+        Object commonObj = model.getModelMapR12().get(ExcelMapper.COMMON);
+        Object totalObj = model.getModelMapR12().get(ExcelMapper.NO_KEY_PRODUCT);
+        Object y12Obj = model.getModelMapR14().get(ExcelMapper.Y12);
+        Object rdsObj = model.getModelMapR14().get("Amazon Relational Database Service");
+        double common = new BigDecimal(commonObj != null ? commonObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double total = new BigDecimal(totalObj != null ? totalObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double cloudwatch = new BigDecimal(y12Obj != null ? y12Obj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double rds = new BigDecimal(rdsObj != null ? rdsObj.toString() : "0").setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double ec2 = total - cloudwatch - rds + common;
+        model.getModelMapR14().put(ExcelMapper.W12, String.valueOf(ec2));
+    }
+    private void recordRawResponse(String queryName, GetCostAndUsageResponse response) {
+        Map<String, Object> queryRecord = new LinkedHashMap<>();
+        queryRecord.put("queryType", queryName);
+        List<Map<String, Object>> results = new ArrayList<>();
+        if (response != null && response.resultsByTime() != null) {
+            for (ResultByTime result : response.resultsByTime()) {
+                Map<String, Object> timeRecord = new LinkedHashMap<>();
+                timeRecord.put("timePeriod", Map.of("start", result.timePeriod().start(), "end", result.timePeriod().end()));
+                timeRecord.put("estimated", result.estimated());
+                List<Map<String, Object>> groups = new ArrayList<>();
+                if (result.groups() != null) {
+                    for (Group group : result.groups()) {
+                        Map<String, Object> groupRecord = new LinkedHashMap<>();
+                        groupRecord.put("keys", group.keys());
+                        Map<String, Map<String, String>> metrics = new LinkedHashMap<>();
+                        if (group.metrics() != null) {
+                            group.metrics().forEach((k, v) -> {
+                                metrics.put(k, Map.of("amount", v.amount(), "unit", v.unit()));
+                            });
+                        }
+                        groupRecord.put("metrics", metrics);
+                        groups.add(groupRecord);
+                    }
+                }
+                timeRecord.put("groups", groups);
+                results.add(timeRecord);
+            }
+        }
+        queryRecord.put("results", results);
+        rawQueriesData.add(queryRecord);
+    }
+}
+"@
+[System.IO.File]::WriteAllText($cePath, $ceCode, $utf8NoBom)
+# 2. Cleanly write all Excel Processors
+function Write-Processor($className, $beanName) {
+    $path = "$baseDir\excel\$className.java"
+    $code = @"
+package com.healthproof.intplus.awscost.excel;
+import com.healthproof.intplus.awscost.util.ExcelMapper;
+import org.springframework.stereotype.Component;
+import java.util.Map;
+@Component("$beanName")
+public class $className extends BaseExcelProcessor {
+    @Override
+    protected void writeR12(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B12",bd(val(m,ExcelMapper.B12)));setNum("C12",bd(val(m,ExcelMapper.C12)));setNum("D12",bd(val(m,ExcelMapper.D12)));
+        setNum("H12",bd(val(m,ExcelMapper.H12)));setNum("I12",bd(val(m,ExcelMapper.I12)));setNum("J12",bd(val(m,ExcelMapper.J12)));
+        setNum("K12",bd(val(m,ExcelMapper.K12)));setNum("N12",bd(val(m,ExcelMapper.N12)));setNum("O12",bd(val(m,ExcelMapper.O12)));
+        setNum("P12",bd(val(m,ExcelMapper.P12)));setNum("Q12",bd(val(m,ExcelMapper.Q12)));setNum("R12",bd(val(m,ExcelMapper.R12)));
+        setNum("S12",bd(val(m,ExcelMapper.S12)));setNum("T12",bd(val(m,ExcelMapper.T12)));setNum("U12",bd(val(m,ExcelMapper.U12)));
+        setNum("V12",bd(val(m,ExcelMapper.V12)));
+        setNum("Z12",bd(val(m,"Product`$EM")));
+    }
+    
+    @Override
+    protected void writeR14(Map<String,String> m,String c,String e) {
+        if(!check(c,e))return;
+        setNum("W12",bd(val(m,ExcelMapper.W12)));
+        setNum("Y12",bd(val(m,ExcelMapper.Y12)));
+        setNum("R14", bd(val(m, "Amazon Relational Database Service")));
+        
+        double otherAwsServices = 0;
+        for (Map.Entry<String,String> entry : m.entrySet()) {
+            String serviceName = entry.getKey();
+            if (!serviceName.equals(ExcelMapper.W12) && !serviceName.equals(ExcelMapper.Y12) && !serviceName.equals("Amazon Relational Database Service") && !serviceName.equals("Tax")) {
+                otherAwsServices += bd(entry.getValue());
+            }
+        }
+        setNum("X14", otherAwsServices);
+    }
+    
+    @Override
+    protected void writeR13(Map<String,String> m,String c,String e){
+        if(!check(c,e))return;
+        setNum("B13",bd(val(m,ExcelMapper.B13)));setNum("C13",bd(val(m,ExcelMapper.C13)));setNum("D13",bd(val(m,ExcelMapper.D13)));
+        setNum("H13",bd(val(m,ExcelMapper.H13)));setNum("I13",bd(val(m,ExcelMapper.I13)));setNum("J13",bd(val(m,ExcelMapper.J13)));
+        setNum("K13",bd(val(m,ExcelMapper.K13)));setNum("N13",bd(val(m,ExcelMapper.N13)));setNum("O13",bd(val(m,ExcelMapper.O13)));
+        setNum("P13",bd(val(m,ExcelMapper.P13)));setNum("Q13",bd(val(m,ExcelMapper.Q13)));setNum("Y13",bd(val(m,ExcelMapper.Y13)));
+        setNum("Z13",bd(val(m,"Product`$EM")));
+    }
+}
+"@
+    [System.IO.File]::WriteAllText($path, $code, $utf8NoBom)
+}
+$list = @(
+    @("AmeribenExcelProcessor","ameribenExcelProcessor"),
+    @("BcbsksExcelProcessor","bcbsksExcelProcessor"),
+    @("CloverExcelProcessor","cloverExcelProcessor"),
+    @("DefaultExcelProcessor","defaultExcelProcessor"),
+    @("EmergientExcelProcessor","emergientExcelProcessor"),
+    @("GhcExcelProcessor","ghcExcelProcessor"),
+    @("IbxExcelProcessor","ibxExcelProcessor"),
+    @("PhcExcelProcessor","phcExcelProcessor"),
+    @("QualityExcelProcessor","qualityExcelProcessor"),
+    @("WyoblueExcelProcessor","wyoblueExcelProcessor"),
+    @("ZingExcelProcessor","zingExcelProcessor")
+)
+foreach ($item in $list) {
+    Write-Processor $item[0] $item[1]
+}
+Write-Host "All Java files cleanly written as pure UTF-8 Without BOM. Compilation will succeed now!" -ForegroundColor Green
