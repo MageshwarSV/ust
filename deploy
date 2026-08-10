@@ -1,1 +1,12 @@
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost
+Set-Location -Path "C:\Users\143500\Desktop\awscost\awscost_feature\awscost"
+$outputFile = "export.txt"
+
+"--- FILE STRUCTURE ---" | Out-File $outputFile -Encoding utf8
+$files = Get-ChildItem -Recurse -Include *.java, *.html
+$files | Select-Object -ExpandProperty FullName | Out-File $outputFile -Append -Encoding utf8
+
+"`n--- FILE CONTENTS ---" | Out-File $outputFile -Append -Encoding utf8
+foreach ($file in $files) {
+    "`n=== FILE: $($file.FullName) ===" | Out-File $outputFile -Append -Encoding utf8
+    Get-Content $file.FullName -Raw | Out-File $outputFile -Append -Encoding utf8
+}
