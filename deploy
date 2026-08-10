@@ -1,2 +1,13 @@
-C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java\com\healthproof\intplus\awscost\Model.java
-java: class, interface, enum, or record expected
+$baseDir = "C:\Users\143500\Desktop\awscost\awscost_feature\awscost\src\main\java"
+
+Get-ChildItem -Path $baseDir -Recurse -Filter "*.java" | ForEach-Object {
+    $bytes = [System.IO.File]::ReadAllBytes($_.FullName)
+    # Check for UTF-8 BOM header bytes (0xEF, 0xBB, 0xBF)
+    if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+        $cleanBytes = $bytes[3..($bytes.Length - 1)]
+        [System.IO.File]::WriteAllBytes($_.FullName, $cleanBytes)
+        Write-Host "Removed BOM from: $($_.Name)" -ForegroundColor Yellow
+    }
+}
+
+Write-Host "All project .java files cleaned successfully! You can build now." -ForegroundColor Green
